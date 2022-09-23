@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/v/release/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
 [![GitHub file size in bytes](https://img.shields.io/github/size/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
-[![GitHub](https://img.shields.io/github/license/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/blob/main/LICENSE.md)
+[![GitHub](https://img.shields.io/github/license/i3rror/LAPI-response)](https://img.shields.io/github/license/i3rror/LAPI-response)
 
 This package can return all sorts of responses for API
 
