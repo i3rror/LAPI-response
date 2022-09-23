@@ -1,5 +1,5 @@
 {
-    "name": "i3rror/LAPI-response",
+    "name": "i3rror/lapi-response",
     "description": "API Response trait for laravel",
     "keywords": [
         "response",
