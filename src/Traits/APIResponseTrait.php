@@ -2,7 +2,7 @@
 
 namespace MA\LaravelApiResponse\Traits;
 
-use HttpResponseException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
