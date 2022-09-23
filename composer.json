@@ -1,33 +1,34 @@
 {
-    "name": "i3rror/lapi-response",
-    "description": "API Response trait for laravel",
-    "keywords": [
-        "response",
-        "laravel-api-response",
-        "api-response",
-        "api",
-        "cms",
-        "laravel"
-    ],
-    "authors": [
-        {
-            "name": "Mohamed Aboushady",
-            "email": "me@maboushady.com",
-            "homepage": "https://maboushady.com",
-            "role": "Developer"
-        }
-    ],
-    "type": "library",
-    "license": "MIT",
-    "require": {
-        "php": ">=7.3",
-        "laravel/framework": ">=7.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "MA\\LaravelApiResponse\\": "src/"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+  "name": "i3rror/lapi-response",
+  "description": "API Response trait for laravel",
+  "keywords": [
+    "response",
+    "laravel-api-response",
+    "api-response",
+    "api",
+    "cms",
+    "laravel"
+  ],
+  "authors": [
+    {
+      "name": "Mohamed Aboushady",
+      "email": "me@maboushady.com",
+      "homepage": "https://maboushady.com",
+      "role": "Developer"
+    }
+  ],
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=7.3",
+    "laravel/framework": ">=7.0",
+    "ext-http": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "MA\\LaravelApiResponse\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
