@@ -26,6 +26,18 @@ php artisan vendor:publish --provider="MA\LaravelApiResponse\Providers\APIRespon
 
 Then it's done!
 
+In order to use this package you need to use this code inside your controllers
+```php
+use APIResponseTrait;
+```
+
+There are two ways to use this package
+
+1. Use it globally by adding using this code inside ``App\Http\Controllers\Controller.php``
+2. Use it internally by adding the use code inside the controller you want to use it in.
+
+
+
 Here are a few short examples of what you can do:
 
 ```php

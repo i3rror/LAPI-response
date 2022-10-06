@@ -2,13 +2,15 @@
 
 namespace MA\LaravelApiResponse\Exceptions;
 
-use MA\LaravelApiResponse\Traits\APIResponseTrait;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
+use MA\LaravelApiResponse\Traits\APIResponseTrait;
 use Psr\Log\LogLevel;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -69,14 +71,44 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e): \Symfony\Component\HttpFoundation\Response
     {
-        //NotFoundHttpException
+        // Not found http exception
         if ($e instanceof NotFoundHttpException && $request->wantsJson()) {
             return $this->apiResponse(['type' => 'not found']);
         }
 
-        //MethodNotAllowedHttpException
+        // Method not allowed http exception
         if ($e instanceof MethodNotAllowedHttpException && $request->wantsJson()) {
             return $this->apiResponse(['type' => 'not found']);
+        }
+
+        // Status code 0
+        if ($e instanceof HttpException && $request->wantsJson()) {
+            return $this->apiBadRequest();
+        }
+
+        // Server error
+        if (($e instanceof \Error || $e instanceof \ParseError) && $request->wantsJson()) {
+            // Check if app debug is enabled to return traces
+            if (config('app.debug')) {
+                // Set data
+                $data = new Collection([
+                    'exception' => get_class($e),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTrace(),
+                ]);
+
+                return $this->apiResponse([
+                    'type' => 'server error',
+                    'message' => $e->getMessage(),
+                    'data' => $data,
+                ]);
+            }
+
+            // Return server error response
+            return $this->apiResponse([
+                'type' => 'server error'
+            ]);
         }
 
         return parent::render($request, $e);

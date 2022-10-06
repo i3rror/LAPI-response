@@ -337,6 +337,8 @@ trait APIResponseTrait
             'exception',
             'unauthenticated',
             'unauthorized',
+            'servererror',
+            'error',
         ];
 
         if (in_array($type, $types) || in_array($type, config('response.statusCodes', []))) {
@@ -380,6 +382,10 @@ trait APIResponseTrait
                 case 'unauthenticated':
                 case 'unauthorized':
                     $status_code = Res::HTTP_UNAUTHORIZED;
+                    break;
+                case 'servererror':
+                case 'error':
+                    $status_code = Res::HTTP_INTERNAL_SERVER_ERROR;
                     break;
                 default:
                     $status_code = Res::HTTP_OK;
