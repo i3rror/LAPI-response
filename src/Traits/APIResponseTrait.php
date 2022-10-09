@@ -18,7 +18,7 @@ trait APIResponseTrait
      * @param $data
      * @return Application|ResponseFactory|Res
      */
-    public function apiOk($data)
+    public function apiOk($data): Res|Application|ResponseFactory
     {
         return $this->apiResponse([
             'data' => $data,
@@ -31,7 +31,7 @@ trait APIResponseTrait
      * @param bool $throw_exception
      * @return Application|ResponseFactory|Res
      */
-    public function apiNotFound($errors = null, bool $throw_exception = true)
+    public function apiNotFound($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -54,7 +54,7 @@ trait APIResponseTrait
      * @param bool $throw_exception
      * @return Application|ResponseFactory|Res
      */
-    public function apiBadRequest($errors = null, bool $throw_exception = true)
+    public function apiBadRequest($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -77,7 +77,7 @@ trait APIResponseTrait
      * @param bool $throw_exception
      * @return Application|ResponseFactory|Res
      */
-    public function apiException($errors = null, bool $throw_exception = true)
+    public function apiException($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -96,11 +96,11 @@ trait APIResponseTrait
 
     /**
      * Paginate data
-     * @param LengthAwarePaginator|AnonymousResourceCollection $pagination
+     * @param AnonymousResourceCollection|LengthAwarePaginator $pagination
      * @param bool $reverse_data
      * @return Application|ResponseFactory|Res
      */
-    public function apiPaginate($pagination, bool $reverse_data = false)
+    public function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, bool $reverse_data = false): Res|Application|ResponseFactory
     {
         // Set pagination data
         $isFirst = $pagination->onFirstPage();
@@ -170,7 +170,7 @@ trait APIResponseTrait
      * @param array $customAttributes
      * @return array|Application|ResponseFactory|Res
      */
-    public function apiValidate($data, $roles, array $messages = [], array $customAttributes = [])
+    public function apiValidate(array|Request $data, $roles, array $messages = [], array $customAttributes = []): Res|array|Application|ResponseFactory
     {
         // Check if data is a request instance
         if ($data instanceof Request) {
@@ -193,7 +193,7 @@ trait APIResponseTrait
      * @param $data
      * @return Application|ResponseFactory|Res
      */
-    public function apiDD($data)
+    public function apiDD($data): Res|Application|ResponseFactory
     {
         return $this->apiResponse([
             'type' => 'Exception',
@@ -209,7 +209,7 @@ trait APIResponseTrait
      * @param array $guards
      * @return Application|ResponseFactory|Res
      */
-    public function apiResponse($arg = null, $data = null, array $guards = [])
+    public function apiResponse(array|string $arg = null, $data = null, array $guards = []): Res|Application|ResponseFactory
     {
         // Set attributes
         $type = isset($arg['type']) && !!$this->checkGetType($arg['type']) ? $arg['type'] : null;
@@ -278,7 +278,7 @@ trait APIResponseTrait
      * @param int $status_code
      * @return Application|ResponseFactory|Res
      */
-    private function apiRawResponse($data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK)
+    private function apiRawResponse($data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK): Res|Application|ResponseFactory
     {
         // Filter data[]
         $data = (is_array($data) && config('response.removeNullDataValues', false) ? $this->removeNullArrayValues($data) : $data);
@@ -314,7 +314,7 @@ trait APIResponseTrait
      * @param int|string $type
      * @return array|string|string[]|void
      */
-    private function checkGetType($type = 'OK')
+    private function checkGetType(int|string $type = 'OK')
     {
         // If not string
         if (!is_numeric($type) && !is_string($type)) {
@@ -353,44 +353,24 @@ trait APIResponseTrait
      * @param int|string $type
      * @return int
      */
-    private function setStatusCode($type = 'OK'): int
+    private function setStatusCode(int|string $type = 'OK'): int
     {
         // Get type
         $type = $this->checkGetType($type);
         if (is_numeric($type)) {
             $status_code = $type;
         } else {
-            switch ($type) {
-                case 'created':
-                    $status_code = Res::HTTP_CREATED;
-                    break;
-                case 'accepted':
-                    $status_code = Res::HTTP_ACCEPTED;
-                    break;
-                case 'notfound':
-                    $status_code = Res::HTTP_NOT_FOUND;
-                    break;
-                case 'conflict':
-                    $status_code = Res::HTTP_CONFLICT;
-                    break;
-                case 'badrequest':
-                    $status_code = Res::HTTP_BAD_REQUEST;
-                    break;
-                case 'exception':
-                    $status_code = Res::HTTP_UNPROCESSABLE_ENTITY;
-                    break;
-                case 'unauthenticated':
-                case 'unauthorized':
-                    $status_code = Res::HTTP_UNAUTHORIZED;
-                    break;
-                case 'servererror':
-                case 'error':
-                    $status_code = Res::HTTP_INTERNAL_SERVER_ERROR;
-                    break;
-                default:
-                    $status_code = Res::HTTP_OK;
-                    break;
-            }
+            $status_code = match ($type) {
+                'created' => Res::HTTP_CREATED,
+                'accepted' => Res::HTTP_ACCEPTED,
+                'notfound' => Res::HTTP_NOT_FOUND,
+                'conflict' => Res::HTTP_CONFLICT,
+                'badrequest' => Res::HTTP_BAD_REQUEST,
+                'exception' => Res::HTTP_UNPROCESSABLE_ENTITY,
+                'unauthenticated', 'unauthorized' => Res::HTTP_UNAUTHORIZED,
+                'servererror', 'error' => Res::HTTP_INTERNAL_SERVER_ERROR,
+                default => Res::HTTP_OK,
+            };
         }
         return $status_code;
     }
@@ -412,44 +392,19 @@ trait APIResponseTrait
      */
     private function setMessage(int $status_code = Res::HTTP_OK): string
     {
-        switch ($status_code) {
-            case Res::HTTP_OK:
-                $message = 'OK';
-                break;
-            case Res::HTTP_CREATED:
-                $message = 'Created';
-                break;
-            case Res::HTTP_ACCEPTED:
-                $message = 'Accepted';
-                break;
-            case Res::HTTP_NOT_FOUND:
-                $message = 'Not found!';
-                break;
-            case Res::HTTP_INTERNAL_SERVER_ERROR:
-                $message = 'Internal server error!';
-                break;
-            case Res::HTTP_UNPROCESSABLE_ENTITY:
-                $message = 'Unprocessable entity!';
-                break;
-            case Res::HTTP_UNAUTHORIZED:
-                $message = 'Unauthorized!';
-                break;
-            case Res::HTTP_NO_CONTENT:
-                $message = 'No content!';
-                break;
-            case Res::HTTP_BAD_REQUEST:
-                $message = 'Bad Request!';
-                break;
-            case Res::HTTP_CONFLICT:
-                $message = 'Conflict!';
-                break;
-
-            default:
-                $message = 'Error';
-                break;
-        }
-
-        return $message;
+        return match ($status_code) {
+            Res::HTTP_OK => 'OK',
+            Res::HTTP_CREATED => 'Created',
+            Res::HTTP_ACCEPTED => 'Accepted',
+            Res::HTTP_NOT_FOUND => 'Not found!',
+            Res::HTTP_INTERNAL_SERVER_ERROR => 'Internal server error!',
+            Res::HTTP_UNPROCESSABLE_ENTITY => 'Unprocessable entity!',
+            Res::HTTP_UNAUTHORIZED => 'Unauthorized!',
+            Res::HTTP_NO_CONTENT => 'No content!',
+            Res::HTTP_BAD_REQUEST => 'Bad Request!',
+            Res::HTTP_CONFLICT => 'Conflict!',
+            default => 'Error',
+        };
     }
 
     /**
@@ -458,7 +413,7 @@ trait APIResponseTrait
      * @param string $callback
      * @return mixed
      */
-    private function removeNullArrayValues($array, string $callback = '')
+    private function removeNullArrayValues($array, string $callback = ''): mixed
     {
         foreach ($array as $key => & $value) {
             if (is_array($value)) {
