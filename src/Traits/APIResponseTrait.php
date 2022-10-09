@@ -2,9 +2,9 @@
 
 namespace MA\LaravelApiResponse\Traits;
 
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response as Res;
@@ -303,7 +303,7 @@ trait APIResponseTrait
 
         // Set extra response data
         if (!!sizeof($extra)) {
-            $response = array_merge_recursive_distinct($response, $extra);
+            $response = $this->arrayMergeRecursiveDistinct($response, $extra);
         }
 
         return response($response, $status_code);
@@ -478,5 +478,25 @@ trait APIResponseTrait
         unset($value);
 
         return $array;
+    }
+
+    /**
+     * @param array<int|string, mixed> $array1
+     * @param array<int|string, mixed> $array2
+     *
+     * @return array<int|string, mixed>
+     */
+    private function arrayMergeRecursiveDistinct(array &$array1, array &$array2): array
+    {
+        $merged = $array1;
+        foreach ($array2 as $key => &$value) {
+            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+                $merged[$key] = $this->arrayMergeRecursiveDistinct($merged[$key], $value);
+            } else {
+                $merged[$key] = $value;
+            }
+        }
+
+        return $merged;
     }
 }
