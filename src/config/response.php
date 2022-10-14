@@ -13,6 +13,14 @@ return [
      */
     'setNullEmptyData' => true,
 
+    /*
+     * Return validation error keys
+     * e.g.:
+     * true: [ "email" => "Must me unique." ]
+     * false: [ "Email must me unique." ]
+     */
+    'returnValidationErrorsKeys' => true,
+
     /**
      * Success status codes.
      */
