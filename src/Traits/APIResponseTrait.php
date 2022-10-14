@@ -182,7 +182,13 @@ trait APIResponseTrait
 
         // If validation fails
         if ($validator->fails()) {
-            return $this->apiBadRequest($validator->errors(), true);
+            return $this->apiBadRequest(
+                (
+                    config('response.returnValidationErrorsKeys', true) ?
+                    $validator->errors() :
+                    $validator->errors()->all()
+                ),
+                true);
         }
 
         return $validator->validated();
