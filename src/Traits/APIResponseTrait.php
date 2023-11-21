@@ -174,7 +174,7 @@ trait APIResponseTrait
     {
         // Check if data is a request instance
         if ($data instanceof Request) {
-            $data = $data->only(array_keys($roles));
+            $data = $data->all();
         }
 
         // Validate data
