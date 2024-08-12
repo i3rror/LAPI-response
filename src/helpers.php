@@ -28,7 +28,11 @@ if (!function_exists('response')) {
      */
     function response($content = null, $status = 200, array $headers = [])
     {
-        $factory = app(ResponseFactory::class);
+        if (class_exists('\Laravel\Lumen\Http\ResponseFactory')) {
+            $factory = new Laravel\Lumen\Http\ResponseFactory;
+        } else {
+            $factory = app(ResponseFactory::class);
+        }
 
         if (func_num_args() === 0) {
             return $factory;
