@@ -1,25 +1,17 @@
 <?php
 
-use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\Response;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 if (!function_exists('now')) {
     /**
      * Create a new Carbon instance for the current time.
      *
-     * @param DateTimeZone|string|null $tz
-     * @return Carbon
+     * @param \DateTimeZone|string|null $tz
+     * @return \Illuminate\Support\Carbon
      */
-    function now(DateTimeZone|string|null $tz = null): Carbon
+    function now($tz = null)
     {
         return Date::now($tz);
     }
@@ -29,13 +21,12 @@ if (!function_exists('response')) {
     /**
      * Return a new response from the application.
      *
-     * @param array|string|View|null $content
+     * @param \Illuminate\Contracts\View\View|string|array|null $content
      * @param int $status
      * @param array $headers
-     * @return Response|Application|ResponseFactory
-     * @throws BindingResolutionException
+     * @return ($content is null ? \Illuminate\Contracts\Routing\ResponseFactory : \Illuminate\Http\Response)
      */
-    function response(View|array|string|null $content = '', int $status = 200, array $headers = []): Response|Application|ResponseFactory
+    function response($content = null, $status = 200, array $headers = [])
     {
         $factory = app(ResponseFactory::class);
 
@@ -43,10 +34,9 @@ if (!function_exists('response')) {
             return $factory;
         }
 
-        return $factory->make($content, $status, $headers);
+        return $factory->make($content ?? '', $status, $headers);
     }
 }
-
 
 if (!function_exists('config')) {
     /**
@@ -54,14 +44,11 @@ if (!function_exists('config')) {
      *
      * If an array is passed as the key, we will assume you want to set an array of values.
      *
-     * @param null $key
-     * @param mixed|null $default
-     * @return mixed|Repository
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @param array<string, mixed>|string|null $key
+     * @param mixed $default
+     * @return ($key is null ? \Illuminate\Config\Repository : ($key is string ? mixed : null))
      */
-    function config($key = null, mixed $default = null): mixed
+    function config($key = null, $default = null)
     {
         if (is_null($key)) {
             return app('config');
@@ -75,23 +62,48 @@ if (!function_exists('config')) {
     }
 }
 
+if (!function_exists('config_path')) {
+    /**
+     * Get the configuration path.
+     *
+     * @param string $path
+     * @return string
+     */
+    function config_path($path = '')
+    {
+        return app()->configPath($path);
+    }
+}
 
 if (!function_exists('app')) {
     /**
      * Get the available container instance.
      *
-     * @param string|null $abstract
+     * @template TClass
+     *
+     * @param string|class-string<TClass>|null $abstract
      * @param array $parameters
-     * @return mixed|Application
-     * @throws BindingResolutionException
-     * @throws BindingResolutionException
+     * @return ($abstract is class-string<TClass> ? TClass : ($abstract is null ? \Illuminate\Foundation\Application : mixed))
      */
-    function app(string $abstract = null, array $parameters = []): mixed
+    function app($abstract = null, array $parameters = [])
     {
         if (is_null($abstract)) {
             return Container::getInstance();
         }
 
         return Container::getInstance()->make($abstract, $parameters);
+    }
+}
+
+if (!function_exists('app_path')) {
+    /**
+     * Get the path to the application folder.
+     *
+     * @param string $path
+     * @return string
+     */
+    function app_path($path = '')
+    {
+        return app()->path($path);
     }
 }
