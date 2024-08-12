@@ -304,7 +304,7 @@ trait APIResponseTrait
 
     /**
      * The row response
-     * @param null $data
+     * @param mixed|null $data
      * @param null $message
      * @param array $extra
      * @param int $status_code
@@ -313,7 +313,7 @@ trait APIResponseTrait
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    private function apiRawResponse($data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK): Res|Application|ResponseFactory
+    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK): Res|Application|ResponseFactory
     {
         // Filter data[]
         $data = (is_array($data) && config('response.removeNullDataValues', false) ? $this->removeNullArrayValues($data) : $data);
