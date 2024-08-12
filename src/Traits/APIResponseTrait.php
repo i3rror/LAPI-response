@@ -2,6 +2,7 @@
 
 namespace MA\LaravelApiResponse\Traits;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -10,6 +11,8 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response as Res;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 trait APIResponseTrait
 {
@@ -17,6 +20,9 @@ trait APIResponseTrait
      * The ok response
      * @param $data
      * @return Application|ResponseFactory|Res
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function apiOk($data): Res|Application|ResponseFactory
     {
@@ -27,9 +33,12 @@ trait APIResponseTrait
 
     /**
      * The not found response
-     * @param $errors
+     * @param null $errors
      * @param bool $throw_exception
      * @return Application|ResponseFactory|Res
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function apiNotFound($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
     {
@@ -50,9 +59,12 @@ trait APIResponseTrait
 
     /**
      * The bad request response
-     * @param $errors
+     * @param null $errors
      * @param bool $throw_exception
      * @return Application|ResponseFactory|Res
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function apiBadRequest($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
     {
@@ -73,9 +85,12 @@ trait APIResponseTrait
 
     /**
      * The exception response
-     * @param $errors
+     * @param null $errors
      * @param bool $throw_exception
      * @return Application|ResponseFactory|Res
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function apiException($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
     {
@@ -99,6 +114,9 @@ trait APIResponseTrait
      * @param AnonymousResourceCollection|LengthAwarePaginator $pagination
      * @param bool $reverse_data
      * @return Application|ResponseFactory|Res
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, bool $reverse_data = false): Res|Application|ResponseFactory
     {
@@ -169,6 +187,9 @@ trait APIResponseTrait
      * @param array $messages
      * @param array $customAttributes
      * @return array|Application|ResponseFactory|Res
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function apiValidate(array|Request $data, $roles, array $messages = [], array $customAttributes = []): Res|array|Application|ResponseFactory
     {
@@ -187,8 +208,7 @@ trait APIResponseTrait
                     config('response.returnValidationErrorsKeys', true) ?
                     $validator->errors() :
                     $validator->errors()->all()
-                ),
-                true);
+                ));
         }
 
         return $validator->validated();
@@ -198,6 +218,9 @@ trait APIResponseTrait
      * Die and debug
      * @param $data
      * @return Application|ResponseFactory|Res
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function apiDD($data): Res|Application|ResponseFactory
     {
@@ -214,6 +237,9 @@ trait APIResponseTrait
      * @param null $data
      * @param array $guards
      * @return Application|ResponseFactory|Res
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function apiResponse(array|string $arg = null, $data = null, array $guards = []): Res|Application|ResponseFactory
     {
@@ -278,11 +304,14 @@ trait APIResponseTrait
 
     /**
      * The row response
-     * @param $data
-     * @param $message
+     * @param null $data
+     * @param null $message
      * @param array $extra
      * @param int $status_code
      * @return Application|ResponseFactory|Res
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function apiRawResponse($data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK): Res|Application|ResponseFactory
     {
@@ -319,6 +348,9 @@ trait APIResponseTrait
      * Check and get the type
      * @param int|string $type
      * @return array|string|string[]|void
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function checkGetType(int|string $type = 'OK')
     {
@@ -358,6 +390,9 @@ trait APIResponseTrait
      * Set status from status_code
      * @param int|string $type
      * @return int
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function setStatusCode(int|string $type = 'OK'): int
     {
@@ -385,6 +420,9 @@ trait APIResponseTrait
      * Set status from status_code
      * @param int $status_code
      * @return bool
+     * @throws BindingResolutionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function setStatus(int $status_code = Res::HTTP_OK): bool
     {
