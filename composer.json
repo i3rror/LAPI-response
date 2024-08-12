@@ -21,12 +21,16 @@
   "license": "MIT",
   "require": {
     "php": ">=8.0",
-    "laravel/framework": ">=7.0"
+    "illuminate/contracts": ">=9.0",
+    "illuminate/support": ">=9.0"
   },
   "autoload": {
     "psr-4": {
       "MA\\LaravelApiResponse\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "minimum-stability": "dev",
   "prefer-stable": true
