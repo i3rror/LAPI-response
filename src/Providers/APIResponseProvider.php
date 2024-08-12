@@ -28,9 +28,17 @@ class APIResponseProvider extends ServiceProvider
                 __DIR__ . '/../config/response.php' => config_path('response.php'),
             ], 'config');
         }
-        $this->app->singleton(
-            \Illuminate\Contracts\Debug\ExceptionHandler::class,
-            \MA\LaravelApiResponse\Exceptions\Handler::class
-        );
+        if(class_exists('\Illuminate\Foundation\Exceptions\Handler')){
+            $this->app->singleton(
+                \Illuminate\Contracts\Debug\ExceptionHandler::class,
+                \MA\LaravelApiResponse\Exceptions\Handler::class
+            );
+        }
+        if(class_exists('\Laravel\Lumen\Exceptions\Handler')){
+            $this->app->singleton(
+                \Illuminate\Contracts\Debug\ExceptionHandler::class,
+                \MA\LaravelApiResponse\Exceptions\LumenHandler::class
+            );
+        }
     }
 }
