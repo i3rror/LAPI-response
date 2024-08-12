@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Support\Facades\Date;
 
 if (!function_exists('now')) {
@@ -31,7 +30,7 @@ if (!function_exists('response')) {
         if (class_exists('\Laravel\Lumen\Http\ResponseFactory')) {
             $factory = new Laravel\Lumen\Http\ResponseFactory;
         } else {
-            $factory = app(ResponseFactory::class);
+            $factory = app(\Illuminate\Contracts\Routing\ResponseFactory::class);
         }
 
         if (func_num_args() === 0) {
