@@ -2,7 +2,6 @@
 
 namespace MA\LaravelApiResponse\Traits;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -11,8 +10,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response as Res;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 trait APIResponseTrait
 {
@@ -20,9 +17,6 @@ trait APIResponseTrait
      * The ok response
      * @param $data
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiOk($data): Res|Application|ResponseFactory
     {
@@ -36,9 +30,6 @@ trait APIResponseTrait
      * @param null $errors
      * @param bool $throw_exception
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiNotFound($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
     {
@@ -62,9 +53,6 @@ trait APIResponseTrait
      * @param null $errors
      * @param bool $throw_exception
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiBadRequest($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
     {
@@ -88,9 +76,6 @@ trait APIResponseTrait
      * @param null $errors
      * @param bool $throw_exception
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiException($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
     {
@@ -110,13 +95,34 @@ trait APIResponseTrait
     }
 
     /**
+     * The exception response
+     * @param null $message
+     * @param array|string|null $errors
+     * @return Application|ResponseFactory|Res
+     */
+    public function apiForbidden($message = null, array|string $errors = null): Res|Application|ResponseFactory
+    {
+        // Set errors
+        if (!is_null($errors)) {
+            $errors = [
+                'errors' => (is_array($errors) ? $errors : [$errors])
+            ];
+        }
+
+        return $this->apiResponse([
+            'type' => 'forbidden',
+            'throw_exception' => true,
+            'message' => $message,
+            'data' => null,
+            'errors' => $errors,
+        ]);
+    }
+
+    /**
      * Paginate data
      * @param AnonymousResourceCollection|LengthAwarePaginator $pagination
      * @param bool $reverse_data
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, bool $reverse_data = false): Res|Application|ResponseFactory
     {
@@ -187,9 +193,6 @@ trait APIResponseTrait
      * @param array $messages
      * @param array $customAttributes
      * @return array|Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiValidate(array|Request $data, $roles, array $messages = [], array $customAttributes = []): Res|array|Application|ResponseFactory
     {
@@ -205,7 +208,7 @@ trait APIResponseTrait
         if ($validator->fails()) {
             return $this->apiBadRequest(
                 (
-                    config('response.returnValidationErrorsKeys', true) ?
+                config('response.returnValidationErrorsKeys', true) ?
                     $validator->errors() :
                     $validator->errors()->all()
                 ));
@@ -218,9 +221,6 @@ trait APIResponseTrait
      * Die and debug
      * @param $data
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiDD($data): Res|Application|ResponseFactory
     {
@@ -237,9 +237,6 @@ trait APIResponseTrait
      * @param null $data
      * @param array $guards
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiResponse(array|string $arg = null, $data = null, array $guards = []): Res|Application|ResponseFactory
     {
@@ -309,9 +306,6 @@ trait APIResponseTrait
      * @param array $extra
      * @param int $status_code
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK): Res|Application|ResponseFactory
     {
@@ -348,9 +342,6 @@ trait APIResponseTrait
      * Check and get the type
      * @param int|string $type
      * @return array|string|string[]|void
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function checkGetType(int|string $type = 'OK')
     {
@@ -390,9 +381,6 @@ trait APIResponseTrait
      * Set status from status_code
      * @param int|string $type
      * @return int
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function setStatusCode(int|string $type = 'OK'): int
     {
@@ -408,7 +396,8 @@ trait APIResponseTrait
                 'conflict' => Res::HTTP_CONFLICT,
                 'badrequest' => Res::HTTP_BAD_REQUEST,
                 'exception' => Res::HTTP_UNPROCESSABLE_ENTITY,
-                'unauthenticated', 'unauthorized' => Res::HTTP_UNAUTHORIZED,
+                'unauthenticated' => Res::HTTP_UNAUTHORIZED,
+                'unauthorized', 'forbidden' => Res::HTTP_FORBIDDEN,
                 'servererror', 'error' => Res::HTTP_INTERNAL_SERVER_ERROR,
                 default => Res::HTTP_OK,
             };
@@ -420,9 +409,6 @@ trait APIResponseTrait
      * Set status from status_code
      * @param int $status_code
      * @return bool
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function setStatus(int $status_code = Res::HTTP_OK): bool
     {
@@ -443,7 +429,8 @@ trait APIResponseTrait
             Res::HTTP_NOT_FOUND => 'Not found!',
             Res::HTTP_INTERNAL_SERVER_ERROR => 'Internal server error!',
             Res::HTTP_UNPROCESSABLE_ENTITY => 'Unprocessable entity!',
-            Res::HTTP_UNAUTHORIZED => 'Unauthorized!',
+            Res::HTTP_UNAUTHORIZED => 'Unauthenticated!',
+            Res::HTTP_FORBIDDEN => 'Unauthorized!',
             Res::HTTP_NO_CONTENT => 'No content!',
             Res::HTTP_BAD_REQUEST => 'Bad Request!',
             Res::HTTP_CONFLICT => 'Conflict!',

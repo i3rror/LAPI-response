@@ -38,6 +38,7 @@ return [
         Res::HTTP_UNPROCESSABLE_ENTITY,
         Res::HTTP_BAD_REQUEST,
         Res::HTTP_UNAUTHORIZED,
+        Res::HTTP_FORBIDDEN,
     ],
 
     /**
