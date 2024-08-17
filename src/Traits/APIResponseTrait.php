@@ -100,6 +100,30 @@ trait APIResponseTrait
      * @param array|string|null $errors
      * @return Application|ResponseFactory|Res
      */
+    public function apiUnauthenticated($message = null, array|string $errors = null): Res|Application|ResponseFactory
+    {
+        // Set errors
+        if (!is_null($errors)) {
+            $errors = [
+                'errors' => (is_array($errors) ? $errors : [$errors])
+            ];
+        }
+
+        return $this->apiResponse([
+            'type' => 'unauthenticated',
+            'throw_exception' => true,
+            'message' => $message,
+            'data' => null,
+            'errors' => $errors,
+        ]);
+    }
+
+    /**
+     * The exception response
+     * @param null $message
+     * @param array|string|null $errors
+     * @return Application|ResponseFactory|Res
+     */
     public function apiForbidden($message = null, array|string $errors = null): Res|Application|ResponseFactory
     {
         // Set errors
@@ -397,8 +421,8 @@ trait APIResponseTrait
                 'conflict' => Res::HTTP_CONFLICT,
                 'badrequest' => Res::HTTP_BAD_REQUEST,
                 'exception' => Res::HTTP_UNPROCESSABLE_ENTITY,
-                'unauthenticated' => Res::HTTP_UNAUTHORIZED,
-                'unauthorized', 'forbidden' => Res::HTTP_FORBIDDEN,
+                'unauthenticated', 'unauthorized' => Res::HTTP_UNAUTHORIZED,
+                'forbidden' => Res::HTTP_FORBIDDEN,
                 'servererror', 'error' => Res::HTTP_INTERNAL_SERVER_ERROR,
                 default => Res::HTTP_OK,
             };

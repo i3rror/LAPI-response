@@ -321,8 +321,11 @@ $this->apiBadRequest($errors = null, bool $throw_exception = true)
 First parameter is for errors, and it can be set as string or array, And the second parameter is whether to throw
 exception or not.
 
-Return api forbidden error:
+**Return api forbidden error:**
+
 The first param is for message and can be set as null, The second one is for errors can be either array, string or null.
+
+Default message is **Forbidden**
 
 **PS: if errors is null it won't show errors property in response**
 ```php
@@ -346,7 +349,36 @@ Response:
   }
 }
 ```
-There is api Validate
+
+**Return api unauthenticated error:**
+
+The first param is for message and can be set as null, The second one is for errors can be either array, string or null.
+
+Default message is **Unauthenticated**
+
+**PS: if errors is null it won't show errors property in response**
+```php
+return $this->apiUnauthenticated('TEST MESSAGE', [
+            'error_1' => 'asdasasdasd',
+            'error_2' => 'asdasdasdasd'
+        ]);
+```
+
+Response:
+```json
+{
+  "status": false,
+  "statusCode": 403,
+  "timestamp": 1723864903,
+  "message": "TEST MESSAGE",
+  "data": null,
+  "errors": {
+    "error_1": "asdasasdasd",
+    "error_2": "asdasdasdasd"
+  }
+}
+```
+**There is api Validate**
 
  ```php
 $this->apiValidate($data, $roles, array $messages = [], array $customAttributes = [])
