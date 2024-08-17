@@ -366,6 +366,7 @@ trait APIResponseTrait
             'exception',
             'unauthenticated',
             'unauthorized',
+            'forbidden',
             'servererror',
             'error',
         ];
