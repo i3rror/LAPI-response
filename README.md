@@ -307,22 +307,49 @@ Response:
 #### **List of all methods that can be used:**
 
  ```php
-apiPaginate($pagination, bool $reverse_data = false)
+$this->apiPaginate($pagination, bool $reverse_data = false)
  ```
 
 First parameter is paginated model, And the second parameter is to whether reverse the data or keep it at its order.
 
  ```php
-apiException($errors = null, bool $throw_exception = true)
-apiNotFound($errors = null, bool $throw_exception = true)
-apiBadRequest($errors = null, bool $throw_exception = true)
+$this->apiException($errors = null, bool $throw_exception = true)
+$this->apiNotFound($errors = null, bool $throw_exception = true)
+$this->apiBadRequest($errors = null, bool $throw_exception = true)
  ```
 
 First parameter is for errors, and it can be set as string or array, And the second parameter is whether to throw
 exception or not.
 
+Return api forbidden error:
+The first param is for message and can be set as null, The second one is for errors can be either array, string or null.
+
+**PS: if errors is null it won't show errors property in response**
+```php
+return $this->apiForbidden('TEST MESSAGE', [
+            'error_1' => 'asdasasdasd',
+            'error_2' => 'asdasdasdasd'
+        ]);
+```
+
+Response:
+```json
+{
+  "status": false,
+  "statusCode": 403,
+  "timestamp": 1723864903,
+  "message": "TEST MESSAGE",
+  "data": null,
+  "errors": {
+    "error_1": "asdasasdasd",
+    "error_2": "asdasdasdasd"
+  }
+}
+```
+There is api Validate
+
  ```php
-apiValidate($data, $roles, array $messages = [], array $customAttributes = [])
+$this->apiValidate($data, $roles, array $messages = [], array $customAttributes = [])
  ```
 
 Same as Laravel `This->validate()` method first parameter is for data and the second one is for roles and the 3rd one
