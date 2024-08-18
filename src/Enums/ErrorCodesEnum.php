@@ -44,7 +44,7 @@ enum ErrorCodesEnum: int
     {
         $property = static::class . "::" . strtoupper($name);
         if (defined($property))
-            return $property;
+            return constant($property);
         throw new Exception("Enum '$property' not found!");
     }
 }
