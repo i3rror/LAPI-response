@@ -109,4 +109,19 @@ return [
         Res::HTTP_NOT_EXTENDED,
         Res::HTTP_NETWORK_AUTHENTICATION_REQUIRED,
     ],
+
+    /**
+     * Enable codes
+     */
+    'enableErrorCodes' => true,
+
+    /**
+     * Error codes enum class
+     */
+    'errorCodes' => \MA\LaravelApiResponse\Enums\ErrorCodesEnum::class,
+
+    /**
+     * Error codes as string or integer
+     */
+    'errorCodesType' => 'string',
 ];
