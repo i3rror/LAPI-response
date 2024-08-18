@@ -370,10 +370,10 @@ trait APIResponseTrait
      * @param null $message
      * @param array $extra
      * @param int $status_code
-     * @param int|string|null $errorCode
+     * @param null|UnitEnum $errorCode
      * @return Application|ResponseFactory|Res
      */
-    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK, null|int|string $errorCode = null): Res|Application|ResponseFactory
+    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK, null|UnitEnum $errorCode = null): Res|Application|ResponseFactory
     {
         // Filter data[]
         $data = (is_array($data) && config('response.removeNullDataValues', false) ? $this->removeNullArrayValues($data) : $data);
@@ -572,10 +572,11 @@ trait APIResponseTrait
     }
 
     /**
+     * Get error code
      * @param $errorCode
-     * @return UnitEnum|string
+     * @return UnitEnum
      */
-    private function getErrorCode($errorCode): UnitEnum|string
+    private function getErrorCode($errorCode): UnitEnum
     {
         // Set a default value if error code not sent
         $errorCodesEnum = config('response.errorCodes', ErrorCodesEnum::class);
@@ -584,6 +585,7 @@ trait APIResponseTrait
         if (!$errorCodesEnum instanceof UnitEnum) {
             $errorCodesEnum = ErrorCodesEnum::class;
         }
-        return $errorCodesEnum . "::getProperty($errorCode)";
+
+        return call_user_func([$errorCodesEnum, 'getProperty'], $errorCode);
     }
 }

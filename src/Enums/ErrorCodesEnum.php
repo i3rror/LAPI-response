@@ -2,6 +2,9 @@
 
 namespace MA\LaravelApiResponse\Enums;
 
+use Exception;
+use UnitEnum;
+
 enum ErrorCodesEnum: int
 {
     case INVALID_CREDENTIALS = 1000;
@@ -34,13 +37,14 @@ enum ErrorCodesEnum: int
 
     /**
      * @param $name
-     * @return mixed
+     * @return ErrorCodesEnum
+     * @throws Exception
      */
-    private static function getProperty($name)
+    private static function getProperty($name): ErrorCodesEnum
     {
         $property = static::class . "::" . strtoupper($name);
         if (defined($property))
-            return constant($property);
-        throw new \Exception("Enum '$property' not found!");
+            return $property;
+        throw new Exception("Enum '$property' not found!");
     }
 }
