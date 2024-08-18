@@ -40,7 +40,7 @@ enum ErrorCodesEnum: int
      * @return ErrorCodesEnum
      * @throws Exception
      */
-    private static function getProperty($name): ErrorCodesEnum
+    public static function getProperty($name): ErrorCodesEnum
     {
         $property = static::class . "::" . strtoupper($name);
         if (defined($property))
