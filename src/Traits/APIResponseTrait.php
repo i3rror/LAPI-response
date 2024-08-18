@@ -573,9 +573,9 @@ trait APIResponseTrait
 
     /**
      * @param $errorCode
-     * @return UnitEnum
+     * @return UnitEnum|string
      */
-    private function getErrorCode($errorCode): UnitEnum
+    private function getErrorCode($errorCode): UnitEnum|string
     {
         // Set a default value if error code not sent
         $errorCodesEnum = config('response.errorCodes', ErrorCodesEnum::class);
