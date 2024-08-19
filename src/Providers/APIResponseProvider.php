@@ -26,7 +26,7 @@ class APIResponseProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/response.php' => config_path('response.php'),
-            ], 'lapi-response');
+            ], 'lapi-response-config');
         }
         if(class_exists('\Illuminate\Foundation\Exceptions\Handler')){
             $this->app->singleton(

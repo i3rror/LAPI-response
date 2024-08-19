@@ -443,7 +443,7 @@ Response:
 ```
 ### For error codes in config file
 1. [x] Enable or disable it.
-2. [x] Set error code enum class.
+2. [x] Set error code enum class or maybe your custom enum class.
 3. [x] Set error codes output type (string or integer).
 4. [x] Enable or disable returning default error codes if set as null.
 5. [x] Set error codes defaults for error functions.
