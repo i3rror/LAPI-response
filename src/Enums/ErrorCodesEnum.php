@@ -3,7 +3,6 @@
 namespace MA\LaravelApiResponse\Enums;
 
 use Exception;
-use UnitEnum;
 
 enum ErrorCodesEnum: int
 {
@@ -36,13 +35,18 @@ enum ErrorCodesEnum: int
 
 
     /**
-     * @param $name
+     * @param string|int $code
      * @return ErrorCodesEnum
      * @throws Exception
      */
-    public static function getProperty($name): ErrorCodesEnum
+    public static function getProperty(string|int $code): ErrorCodesEnum
     {
-        $property = static::class . "::" . strtoupper($name);
+        if (is_numeric($code)) {
+            $property = static::class . "::" . static::tryFrom($code)->name;
+        } else {
+            $property = static::class . "::" . strtoupper($code);
+        }
+
         if (defined($property))
             return constant($property);
         throw new Exception("Enum '$property' not found!");

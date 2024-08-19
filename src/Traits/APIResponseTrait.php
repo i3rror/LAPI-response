@@ -370,10 +370,10 @@ trait APIResponseTrait
      * @param null $message
      * @param array $extra
      * @param int $status_code
-     * @param null|UnitEnum $errorCode
+     * @param null|UnitEnum|int|string $errorCode
      * @return Application|ResponseFactory|Res
      */
-    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK, null|UnitEnum $errorCode = null): Res|Application|ResponseFactory
+    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK, null|UnitEnum|int|string $errorCode = null): Res|Application|ResponseFactory
     {
         // Filter data[]
         $data = (is_array($data) && config('response.removeNullDataValues', false) ? $this->removeNullArrayValues($data) : $data);
@@ -403,6 +403,11 @@ trait APIResponseTrait
             $errorCodesType = config('response.errorCodesType', 'string');
             if (!in_array($errorCodesType, ['string', 'integer'])) {
                 $errorCodesType = 'string';
+            }
+
+            // Get error code if not enum
+            if (!$errorCode instanceof UnitEnum) {
+                $errorCode = $this->getErrorCode($errorCode);
             }
 
             // Set error code
@@ -573,10 +578,10 @@ trait APIResponseTrait
 
     /**
      * Get error code
-     * @param $errorCode
+     * @param string|int $errorCode
      * @return UnitEnum
      */
-    private function getErrorCode($errorCode): UnitEnum
+    private function getErrorCode(string|int $errorCode): UnitEnum
     {
         // Set a default value if error code not sent
         $errorCodesEnum = config('response.errorCodes', ErrorCodesEnum::class);
