@@ -14,7 +14,7 @@ class PublishErrorCodesEnumCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'lapi-response:publish-error-codes';
+    protected $signature = 'lapi-response:publish-error-codes {name=ErrorCodesEnum}';
 
     /**
      * The console command description.
@@ -22,6 +22,8 @@ class PublishErrorCodesEnumCommand extends GeneratorCommand
      * @var string
      */
     protected $description = 'Publish error codes enum class for Laravel api response package';
+
+    protected $type = 'Enum';
 
     /**
      * Get the stub file for the generator.
@@ -65,16 +67,5 @@ class PublishErrorCodesEnumCommand extends GeneratorCommand
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the cast already exists'],
         ];
-    }
-
-
-    /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return trim($this->hasArgument('name') ? $this->argument('name') : 'ErrorCodesEnum');
     }
 }

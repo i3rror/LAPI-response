@@ -447,6 +447,17 @@ Response:
 3. [x] Set error codes output type (string or integer).
 4. [x] Enable or disable returning default error codes if set as null.
 5. [x] Set error codes defaults for error functions.
+
+### In order to publish the ErrorCodesEnum class
+```cmd
+php artisan lapi-response:publish-error-codes
+```
+You can also specify the class name if you want
+
+```cmd
+php artisan lapi-response:publish-error-codes CustomErrorCodesEnum
+```
+Otherwise it will generate it with the default class name as **ErrorCodesEnum**
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
