@@ -6,7 +6,7 @@ use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-#[AsCommand(name: 'api-response:publish-error-codes')]
+#[AsCommand(name: 'lapi-response:publish-error-codes')]
 class PublishErrorCodesEnumCommand extends GeneratorCommand
 {
     /**
