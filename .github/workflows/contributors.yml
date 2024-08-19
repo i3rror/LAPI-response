@@ -1,17 +1,25 @@
-name: Contributors
+name: Add contributors
 on:
   schedule:
-    - cron: '0 1 * * 0' # At 01:00 on Sunday.
+    - cron: '20 20 * * *'
   push:
     branches:
       - dev
+
 jobs:
-  contributors:
+  add-contributors:
     runs-on: ubuntu-latest
     steps:
-      - uses: hyperledger-tooling/github-contributors-action@v0.0.1
-        env:
-          GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CONTRIBUTORS_SECTION_PATTERN: "# # Contributors"
-          CONTRIBUTORS_SECTION_END_PATTERN: "## License"
-          FILE_WITH_PATTERN: ./README.md
+      - uses: actions/checkout@v2
+      - uses: BobAnkh/add-contributors@master
+        with:
+          CONTRIBUTOR: '### Contributors Test'
+          COLUMN_PER_ROW: '6'
+          ACCESS_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          IMG_WIDTH: '48'
+          FONT_SIZE: '14'
+          PATH: '/README.md'
+          COMMIT_MESSAGE: 'docs(README): update contributors'
+          AVATAR_SHAPE: 'round'
+          BRANCH: 'dev'
+          PULL_REQUEST: 'update-contributors'
