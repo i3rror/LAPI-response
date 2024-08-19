@@ -76,24 +76,24 @@ Expected response
 
 ```json
 {
-    "status": true,
-    "statusCode": 200,
-    "timestamp": 1662070087,
-    "message": "Test Message",
-    "data": [
-        {
-            "id": 1,
-            "name": "Test Name"
-        },
-        {
-            "id": 2,
-            "name": "Test Name 2"
-        },
-        {
-            "id": 3,
-            "name": "Test Name 3"
-        }
-    ]
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1662070087,
+  "message": "Test Message",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test Name"
+    },
+    {
+      "id": 2,
+      "name": "Test Name 2"
+    },
+    {
+      "id": 3,
+      "name": "Test Name 3"
+    }
+  ]
 }
 ```
 
@@ -113,11 +113,11 @@ Responses:
 
 ```json
 {
-    "status": true,
-    "statusCode": 200,
-    "timestamp": 1662104853,
-    "message": "OK",
-    "data": "test message"
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1662104853,
+  "message": "OK",
+  "data": "test message"
 }
 ```
 
@@ -161,24 +161,24 @@ Response:
 
 ```json
 {
-    "status": true,
-    "statusCode": 200,
-    "timestamp": 1662105038,
-    "message": "OK",
-    "data": [
-        {
-            "id": 1,
-            "name": "Test Name"
-        },
-        {
-            "id": 2,
-            "name": "Test Name 2"
-        },
-        {
-            "id": 3,
-            "name": "Test Name 3"
-        }
-    ]
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1662105038,
+  "message": "OK",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test Name"
+    },
+    {
+      "id": 2,
+      "name": "Test Name 2"
+    },
+    {
+      "id": 3,
+      "name": "Test Name 3"
+    }
+  ]
 }
 ```
 
@@ -195,11 +195,11 @@ return $this->apiResponse([
 Response:
 ```json
 {
-    "status": false,
-    "statusCode": 404,
-    "timestamp": 1662121027,
-    "message": "Not found!",
-    "data": null
+  "status": false,
+  "statusCode": 404,
+  "timestamp": 1662121027,
+  "message": "Not found!",
+  "data": null
 }
 ```
 There is a list of all status strings you can use **(otherwise you can use status code)**
@@ -213,7 +213,45 @@ There is a list of all status strings you can use **(otherwise you can use statu
 * unauthorized
 * ok
 
-There is validation function as example:
+These are all the arguments you can send in apiResponse function
+1. type => the types we wrote earlier.
+2. filter_data => boolean.
+3. throw_exception => boolean.
+4. message => string.
+5. errorCode => Check `MA\LaravelApiResponse\Enums\ErrorCodesEnum`, you can either send it as integer, string or UnitEnum.
+6. status_code => integer (it will be applied only of type is not sent).
+
+**as example**
+```php
+/*
+* Error code examples:
+* THROTTLING_ERROR
+* 1021
+* ErrorCodesEnum::THROTTLING_ERROR
+* ErrorCodesEnum::THROTTLING_ERROR->name
+* ErrorCodesEnum::THROTTLING_ERROR->value
+*/
+return $this->apiResponse([
+    'type' => 'notfound',
+    'filter_data' => true,
+    'throw_exception' => true,
+    'message' => 'TestMessage',
+    'errorCode' => 'INVALID_CREDENTIALS', // you can make it string, integer or UnitEnum
+]);
+```
+Response:
+```json
+{
+  "status": false,
+  "statusCode": 404,
+  "timestamp": 1724082523,
+  "message": "TestMessage",
+  "data": null,
+  "errorCode": "INVALID_CREDENTIALS"
+}
+```
+
+**There is validation function as example:**
 ```php
 $data = $this->apiValidate($request, [
     'countryId' => ['required'],
@@ -225,21 +263,21 @@ $data = $this->apiValidate($request, [
 Response:
 ```json
 {
-    "status": false,
-    "statusCode": 400,
-    "timestamp": 1662122013,
-    "message": "Bad Request!",
-    "data": null,
-    "errors": [
-        {
-            "countryId": [
-                "The country id field is required."
-            ],
-            "email": [
-                "The email must be a valid email address."
-            ]
-        }
-    ]
+  "status": false,
+  "statusCode": 400,
+  "timestamp": 1662122013,
+  "message": "Bad Request!",
+  "data": null,
+  "errors": [
+    {
+      "countryId": [
+        "The country id field is required."
+      ],
+      "email": [
+        "The email must be a valid email address."
+      ]
+    }
+  ]
 }
 ```
 You can use a pagination response as example:
@@ -256,53 +294,53 @@ Response:
 
 ```json
 {
-    "status": true,
-    "statusCode": 200,
-    "timestamp": 1662070940,
-    "message": "OK",
-    "data": [
-        {
-            "id": 1,
-            "name": "Test 1",
-            "is_active": true,
-            "created_at": null,
-            "updated_at": null
-        },
-        {
-            "id": 2,
-            "name": "Test 2",
-            "is_active": true,
-            "created_at": null,
-            "updated_at": null
-        }
-    ],
-    "pagination": {
-        "meta": {
-            "page": {
-                "current": 1,
-                "first": 1,
-                "last": 10,
-                "next": 2,
-                "previous": null,
-                "per": 2,
-                "from": 1,
-                "to": 2,
-                "count": 2,
-                "total": 20,
-                "isFirst": true,
-                "isLast": false,
-                "isNext": true,
-                "isPrevious": false
-            }
-        },
-        "links": {
-            "path": "https://laravel-v8.test/api/data",
-            "first": "https://laravel-v8.test/api/data?page=1",
-            "next": "https://laravel-v8.test/api/data?page=2",
-            "previous": null,
-            "last": "https://laravel-v8.test/api/data?page=10"
-        }
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1662070940,
+  "message": "OK",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test 1",
+      "is_active": true,
+      "created_at": null,
+      "updated_at": null
+    },
+    {
+      "id": 2,
+      "name": "Test 2",
+      "is_active": true,
+      "created_at": null,
+      "updated_at": null
     }
+  ],
+  "pagination": {
+    "meta": {
+      "page": {
+        "current": 1,
+        "first": 1,
+        "last": 10,
+        "next": 2,
+        "previous": null,
+        "per": 2,
+        "from": 1,
+        "to": 2,
+        "count": 2,
+        "total": 20,
+        "isFirst": true,
+        "isLast": false,
+        "isNext": true,
+        "isPrevious": false
+      }
+    },
+    "links": {
+      "path": "https://laravel-v8.test/api/data",
+      "first": "https://laravel-v8.test/api/data?page=1",
+      "next": "https://laravel-v8.test/api/data?page=2",
+      "previous": null,
+      "last": "https://laravel-v8.test/api/data?page=10"
+    }
+  }
 }
 ```
 
@@ -418,27 +456,27 @@ return $this->apiDD([
 ]);
 ```
 
-Response: 
+Response:
 ```json
 {
-    "status": false,
-    "statusCode": 422,
-    "timestamp": 1662105345,
-    "message": "Die and dump",
-    "data": [
-        {
-            "id": 1,
-            "name": "Test Name"
-        },
-        {
-            "id": 2,
-            "name": "Test Name 2"
-        },
-        {
-            "id": 3,
-            "name": "Test Name 3"
-        }
-    ]
+  "status": false,
+  "statusCode": 422,
+  "timestamp": 1662105345,
+  "message": "Die and dump",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test Name"
+    },
+    {
+      "id": 2,
+      "name": "Test Name 2"
+    },
+    {
+      "id": 3,
+      "name": "Test Name 3"
+    }
+  ]
 }
 ```
 ### For error codes in config file
