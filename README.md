@@ -524,28 +524,6 @@ php artisan lapi-response:publish-error-codes CustomErrorCodesEnum
 Otherwise it will generate it with the default class name as **ErrorCodesEnum**
 
 ## Contributors
-<markdown-accessiblity-table data-catalyst>
-<table>
-   <tbody>
-      <tr style="border: none">
-         <td align="center" style="border: none">
-            <a class="contributor-link" href="https://github.com/i3rror" style="border-radius: 50%;">
-                <img src="https://avatars.githubusercontent.com/u/26237098" style="border-radius: 50%" width="48" height="48" alt="Mohamed Aboushady"
-                     title="Mohamed Aboushady"/>
-            </a>
-         </td>
-         <td align="center" style="border: none">
-            <a class="contributor-link" href="https://github.com/Ahmed-Elrayes" style="border-radius: 50%;">
-               <img src="https://avatars.githubusercontent.com/u/30704271" style="border-radius: 50%" width="48" height="48" alt="Ahmed Elrayes"
-                    title="Ahmed Elrayes"/>
-            </a>
-         </td>
-      </tr>
-   </tbody>
-</table>
-</markdown-accessiblity-table>
-
-### Contributors Test
 
 ## License
 
