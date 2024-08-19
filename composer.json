@@ -15,6 +15,11 @@
       "email": "me@maboushady.com",
       "homepage": "https://maboushady.com",
       "role": "Developer"
+    },
+    {
+      "name": "Ahmed Elrayes",
+      "email": "ahmedwaill63@gmail.com",
+      "role": "Developer"
     }
   ],
   "type": "library",
