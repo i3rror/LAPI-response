@@ -2,7 +2,6 @@
 
 namespace MA\LaravelApiResponse\Traits;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -11,8 +10,8 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response as Res;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use MA\LaravelApiResponse\Enums\ErrorCodesEnum;
+use UnitEnum;
 
 trait APIResponseTrait
 {
@@ -20,9 +19,6 @@ trait APIResponseTrait
      * The ok response
      * @param $data
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiOk($data): Res|Application|ResponseFactory
     {
@@ -35,18 +31,21 @@ trait APIResponseTrait
      * The not found response
      * @param null $errors
      * @param bool $throw_exception
+     * @param string|int|UnitEnum|null $errorCode
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function apiNotFound($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
+    public function apiNotFound($errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
             $errors = [
                 'errors' => (is_array($errors) ? $errors : [$errors])
             ];
+        }
+
+        // Set a default value if error code not sent
+        if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
+            $errorCode = $this->getErrorCode('RESOURCE_NOT_FOUND');
         }
 
         return $this->apiResponse([
@@ -54,6 +53,7 @@ trait APIResponseTrait
             'throw_exception' => $throw_exception,
             'data' => null,
             'errors' => $errors,
+            'errorCode' => $errorCode,
         ]);
     }
 
@@ -61,18 +61,21 @@ trait APIResponseTrait
      * The bad request response
      * @param null $errors
      * @param bool $throw_exception
+     * @param string|int|null|UnitEnum $errorCode
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function apiBadRequest($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
+    public function apiBadRequest($errors = null, bool $throw_exception = true, string|int|null|UnitEnum $errorCode = null): Res|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
             $errors = [
                 'errors' => (is_array($errors) ? $errors : [$errors])
             ];
+        }
+
+        // Set a default value if error code not sent
+        if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
+            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiNotFound', 'RESOURCE_NOT_FOUND'));
         }
 
         return $this->apiResponse([
@@ -80,6 +83,7 @@ trait APIResponseTrait
             'throw_exception' => $throw_exception,
             'data' => null,
             'errors' => $errors,
+            'errorCode' => $errorCode,
         ]);
     }
 
@@ -87,12 +91,10 @@ trait APIResponseTrait
      * The exception response
      * @param null $errors
      * @param bool $throw_exception
+     * @param string|int|UnitEnum|null $errorCode
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function apiException($errors = null, bool $throw_exception = true): Res|Application|ResponseFactory
+    public function apiException($errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -101,11 +103,79 @@ trait APIResponseTrait
             ];
         }
 
+        // Set a default value if error code not sent
+        if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
+            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiException', 'SERVER_ERROR'));
+        }
+
         return $this->apiResponse([
             'type' => 'Exception',
             'throw_exception' => $throw_exception,
             'data' => null,
             'errors' => $errors,
+            'errorCode' => $errorCode,
+        ]);
+    }
+
+    /**
+     * The exception response
+     * @param null $message
+     * @param array|string|null $errors
+     * @param string|int|UnitEnum|null $errorCode
+     * @return Application|ResponseFactory|Res
+     */
+    public function apiUnauthenticated($message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
+    {
+        // Set errors
+        if (!is_null($errors)) {
+            $errors = [
+                'errors' => (is_array($errors) ? $errors : [$errors])
+            ];
+        }
+
+        // Set a default value if error code not sent
+        if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
+            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiUnauthenticated', 'UNAUTHORIZED_ACCESS'));
+        }
+
+        return $this->apiResponse([
+            'type' => 'unauthenticated',
+            'throw_exception' => true,
+            'message' => $message,
+            'data' => null,
+            'errors' => $errors,
+            'errorCode' => $errorCode,
+        ]);
+    }
+
+    /**
+     * The exception response
+     * @param null $message
+     * @param array|string|null $errors
+     * @param string|int|UnitEnum|null $errorCode
+     * @return Application|ResponseFactory|Res
+     */
+    public function apiForbidden($message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
+    {
+        // Set errors
+        if (!is_null($errors)) {
+            $errors = [
+                'errors' => (is_array($errors) ? $errors : [$errors])
+            ];
+        }
+
+        // Set a default value if error code not sent
+        if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
+            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiForbidden', 'FORBIDDEN'));
+        }
+
+        return $this->apiResponse([
+            'type' => 'forbidden',
+            'throw_exception' => true,
+            'message' => $message,
+            'data' => null,
+            'errors' => $errors,
+            'errorCode' => $errorCode,
         ]);
     }
 
@@ -114,9 +184,6 @@ trait APIResponseTrait
      * @param AnonymousResourceCollection|LengthAwarePaginator $pagination
      * @param bool $reverse_data
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, bool $reverse_data = false): Res|Application|ResponseFactory
     {
@@ -187,9 +254,6 @@ trait APIResponseTrait
      * @param array $messages
      * @param array $customAttributes
      * @return array|Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiValidate(array|Request $data, $roles, array $messages = [], array $customAttributes = []): Res|array|Application|ResponseFactory
     {
@@ -203,12 +267,18 @@ trait APIResponseTrait
 
         // If validation fails
         if ($validator->fails()) {
-            return $this->apiBadRequest(
-                (
-                    config('response.returnValidationErrorsKeys', true) ?
-                    $validator->errors() :
-                    $validator->errors()->all()
-                ));
+
+            // Set errors
+            $errors = config('response.returnValidationErrorsKeys', true) ?
+                $validator->errors() :
+                $validator->errors()->all();
+            if ((bool)config('response.returnDefaultErrorCodes', true)) {
+                $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiValidate', 'VALIDATION_FAILED'));
+            } else {
+                $errorCode = null;
+            }
+
+            return $this->apiBadRequest($errors, true, $errorCode);
         }
 
         return $validator->validated();
@@ -218,9 +288,6 @@ trait APIResponseTrait
      * Die and debug
      * @param $data
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiDD($data): Res|Application|ResponseFactory
     {
@@ -237,9 +304,6 @@ trait APIResponseTrait
      * @param null $data
      * @param array $guards
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function apiResponse(array|string $arg = null, $data = null, array $guards = []): Res|Application|ResponseFactory
     {
@@ -248,6 +312,7 @@ trait APIResponseTrait
         $filter_data = isset($arg['filter_data']) && (bool)$arg['filter_data'];
         $throw_exception = !isset($arg['throw_exception']) || (bool)$arg['throw_exception'];
         $message = $arg['message'] ?? null;
+        $errorCode = $arg['errorCode'] ?? null;
 
         // Handle type
         if (is_null($type) && (!is_null($arg) && !is_array($arg) && !is_null($data))) {
@@ -289,9 +354,9 @@ trait APIResponseTrait
 
         // Check if errors
         if (isset($arg['errors'])) {
-            $response = $this->apiRawResponse($data, $message, $arg['errors'], $status_code);
+            $response = $this->apiRawResponse($data, $message, $arg['errors'], $status_code, $errorCode);
         } else {
-            $response = $this->apiRawResponse($data, $message, [], $status_code);
+            $response = $this->apiRawResponse($data, $message, [], $status_code, $errorCode);
         }
 
         // Throw exceptions
@@ -308,12 +373,10 @@ trait APIResponseTrait
      * @param null $message
      * @param array $extra
      * @param int $status_code
+     * @param null|UnitEnum|int|string $errorCode
      * @return Application|ResponseFactory|Res
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK): Res|Application|ResponseFactory
+    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK, null|UnitEnum|int|string $errorCode = null): Res|Application|ResponseFactory
     {
         // Filter data[]
         $data = (is_array($data) && config('response.removeNullDataValues', false) ? $this->removeNullArrayValues($data) : $data);
@@ -328,13 +391,36 @@ trait APIResponseTrait
             }
         }
 
-        $response = [
+        // Set response
+        $response = collect([
             'status' => $this->setStatus($status_code),
             'statusCode' => $status_code,
             'timestamp' => now()->timestamp,
             'message' => ($message == null ? $this->setMessage($status_code) : $message),
             'data' => $data,
-        ];
+        ]);
+
+        // Check if error codes enabled
+        if (config('response.enableErrorCodes', true) && $errorCode) {
+            // Get error codes type
+            $errorCodesType = config('response.errorCodesType', 'string');
+            if (!in_array($errorCodesType, ['string', 'integer'])) {
+                $errorCodesType = 'string';
+            }
+
+            // Get error code if not enum
+            if (!$errorCode instanceof UnitEnum) {
+                $errorCode = $this->getErrorCode($errorCode);
+            }
+
+            // Set error code
+            $errorCode = $errorCodesType === 'string' ? $errorCode->name : $errorCode->value;
+
+            $response->put('errorCode', $errorCode);
+        }
+
+        // Convert to array
+        $response = $response->toArray();
 
         // Set extra response data
         if (!!sizeof($extra)) {
@@ -348,9 +434,6 @@ trait APIResponseTrait
      * Check and get the type
      * @param int|string $type
      * @return array|string|string[]|void
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function checkGetType(int|string $type = 'OK')
     {
@@ -375,6 +458,7 @@ trait APIResponseTrait
             'exception',
             'unauthenticated',
             'unauthorized',
+            'forbidden',
             'servererror',
             'error',
         ];
@@ -390,9 +474,6 @@ trait APIResponseTrait
      * Set status from status_code
      * @param int|string $type
      * @return int
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function setStatusCode(int|string $type = 'OK'): int
     {
@@ -409,6 +490,7 @@ trait APIResponseTrait
                 'badrequest' => Res::HTTP_BAD_REQUEST,
                 'exception' => Res::HTTP_UNPROCESSABLE_ENTITY,
                 'unauthenticated', 'unauthorized' => Res::HTTP_UNAUTHORIZED,
+                'forbidden' => Res::HTTP_FORBIDDEN,
                 'servererror', 'error' => Res::HTTP_INTERNAL_SERVER_ERROR,
                 default => Res::HTTP_OK,
             };
@@ -420,9 +502,6 @@ trait APIResponseTrait
      * Set status from status_code
      * @param int $status_code
      * @return bool
-     * @throws BindingResolutionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function setStatus(int $status_code = Res::HTTP_OK): bool
     {
@@ -443,7 +522,8 @@ trait APIResponseTrait
             Res::HTTP_NOT_FOUND => 'Not found!',
             Res::HTTP_INTERNAL_SERVER_ERROR => 'Internal server error!',
             Res::HTTP_UNPROCESSABLE_ENTITY => 'Unprocessable entity!',
-            Res::HTTP_UNAUTHORIZED => 'Unauthorized!',
+            Res::HTTP_UNAUTHORIZED => 'Unauthenticated!',
+            Res::HTTP_FORBIDDEN => 'Unauthorized!',
             Res::HTTP_NO_CONTENT => 'No content!',
             Res::HTTP_BAD_REQUEST => 'Bad Request!',
             Res::HTTP_CONFLICT => 'Conflict!',
@@ -497,5 +577,23 @@ trait APIResponseTrait
         }
 
         return $merged;
+    }
+
+    /**
+     * Get error code
+     * @param string|int $errorCode
+     * @return UnitEnum
+     */
+    private function getErrorCode(string|int $errorCode): UnitEnum
+    {
+        // Set a default value if error code not sent
+        $errorCodesEnum = config('response.errorCodes', ErrorCodesEnum::class);
+
+        // Set error code enum
+        if (!$errorCodesEnum instanceof UnitEnum) {
+            $errorCodesEnum = ErrorCodesEnum::class;
+        }
+
+        return call_user_func([$errorCodesEnum, 'getProperty'], $errorCode);
     }
 }

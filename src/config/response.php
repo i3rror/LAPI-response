@@ -3,17 +3,13 @@
 use Illuminate\Http\Response as Res;
 
 return [
-    /*
-     * Remove null values from array.
-     */
+    // Remove null values from array.
     'removeNullDataValues' => false,
 
-    /*
-     * Set null data value to null.
-     */
+    // Set null data value to null.
     'setNullEmptyData' => true,
 
-    /*
+    /**
      * Return validation error keys
      * e.g.:
      * true: [ "email" => "Must me unique." ]
@@ -21,28 +17,23 @@ return [
      */
     'returnValidationErrorsKeys' => true,
 
-    /**
-     * Success status codes.
-     */
+    // Success status codes.
     'apiSuccessCodes' => [
         Res::HTTP_OK,
         Res::HTTP_CREATED,
         Res::HTTP_ACCEPTED,
     ],
 
-    /**
-     * Exceptions status codes.
-     */
+    // Exceptions status codes.
     'apiExceptionCodes' => [
         Res::HTTP_CONFLICT,
         Res::HTTP_UNPROCESSABLE_ENTITY,
         Res::HTTP_BAD_REQUEST,
         Res::HTTP_UNAUTHORIZED,
+        Res::HTTP_FORBIDDEN,
     ],
 
-    /**
-     * Status codes.
-     */
+    // Status codes.
     'statusCodes' => [
         Res::HTTP_CONTINUE,
         Res::HTTP_SWITCHING_PROTOCOLS,
@@ -107,5 +98,27 @@ return [
         Res::HTTP_LOOP_DETECTED,
         Res::HTTP_NOT_EXTENDED,
         Res::HTTP_NETWORK_AUTHENTICATION_REQUIRED,
+    ],
+
+    // Enable error codes
+    'enableErrorCodes' => true,
+
+    // Set error codes enum class
+    'errorCodes' => \MA\LaravelApiResponse\Enums\ErrorCodesEnum::class,
+
+    // Set error codes output either string or integer
+    'errorCodesType' => 'string',
+
+    // Return default error codes if error code is set to null
+    'returnDefaultErrorCodes' => true,
+
+    // Set error codes output default value for built-in functions
+    'errorCodesDefaults' => [
+        'apiNotFound' => 'RESOURCE_NOT_FOUND',
+        'apiBadRequest' => 'BAD_REQUEST',
+        'apiException' => 'SERVER_ERROR',
+        'apiUnauthenticated' => 'UNAUTHORIZED_ACCESS',
+        'apiForbidden' => 'FORBIDDEN',
+        'apiValidate' => 'VALIDATION_FAILED',
     ],
 ];
