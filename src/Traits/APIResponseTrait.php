@@ -31,10 +31,10 @@ trait APIResponseTrait
      * The not found response
      * @param null $errors
      * @param bool $throw_exception
-     * @param string|int|null $errorCode
+     * @param string|int|UnitEnum|null $errorCode
      * @return Application|ResponseFactory|Res
      */
-    public function apiNotFound($errors = null, bool $throw_exception = true, string|int|null $errorCode = null): Res|Application|ResponseFactory
+    public function apiNotFound($errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -44,7 +44,7 @@ trait APIResponseTrait
         }
 
         // Set a default value if error code not sent
-        if (!$errorCode) {
+        if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
             $errorCode = $this->getErrorCode('RESOURCE_NOT_FOUND');
         }
 
@@ -74,8 +74,8 @@ trait APIResponseTrait
         }
 
         // Set a default value if error code not sent
-        if (!$errorCode) {
-            $errorCode = $this->getErrorCode('BAD_REQUEST');
+        if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
+            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiNotFound', 'RESOURCE_NOT_FOUND'));
         }
 
         return $this->apiResponse([
@@ -91,10 +91,10 @@ trait APIResponseTrait
      * The exception response
      * @param null $errors
      * @param bool $throw_exception
-     * @param string|int|null $errorCode
+     * @param string|int|UnitEnum|null $errorCode
      * @return Application|ResponseFactory|Res
      */
-    public function apiException($errors = null, bool $throw_exception = true, string|int|null $errorCode = null): Res|Application|ResponseFactory
+    public function apiException($errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -104,8 +104,8 @@ trait APIResponseTrait
         }
 
         // Set a default value if error code not sent
-        if (!$errorCode) {
-            $errorCode = $this->getErrorCode('SERVER_ERROR');
+        if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
+            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiException', 'SERVER_ERROR'));
         }
 
         return $this->apiResponse([
@@ -121,10 +121,10 @@ trait APIResponseTrait
      * The exception response
      * @param null $message
      * @param array|string|null $errors
-     * @param string|int|null $errorCode
+     * @param string|int|UnitEnum|null $errorCode
      * @return Application|ResponseFactory|Res
      */
-    public function apiUnauthenticated($message = null, array|string $errors = null, string|int|null $errorCode = null): Res|Application|ResponseFactory
+    public function apiUnauthenticated($message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -134,8 +134,8 @@ trait APIResponseTrait
         }
 
         // Set a default value if error code not sent
-        if (!$errorCode) {
-            $errorCode = $this->getErrorCode('UNAUTHORIZED_ACCESS');
+        if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
+            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiUnauthenticated', 'UNAUTHORIZED_ACCESS'));
         }
 
         return $this->apiResponse([
@@ -152,10 +152,10 @@ trait APIResponseTrait
      * The exception response
      * @param null $message
      * @param array|string|null $errors
-     * @param string|int|null $errorCode
+     * @param string|int|UnitEnum|null $errorCode
      * @return Application|ResponseFactory|Res
      */
-    public function apiForbidden($message = null, array|string $errors = null, string|int|null $errorCode = null): Res|Application|ResponseFactory
+    public function apiForbidden($message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -165,8 +165,8 @@ trait APIResponseTrait
         }
 
         // Set a default value if error code not sent
-        if (!$errorCode) {
-            $errorCode = $this->getErrorCode('FORBIDDEN');
+        if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
+            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiForbidden', 'FORBIDDEN'));
         }
 
         return $this->apiResponse([
@@ -272,8 +272,11 @@ trait APIResponseTrait
             $errors = config('response.returnValidationErrorsKeys', true) ?
                 $validator->errors() :
                 $validator->errors()->all();
-
-            $errorCode = $this->getErrorCode('VALIDATION_FAILED');
+            if ((bool)config('response.returnDefaultErrorCodes', true)) {
+                $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiValidate', 'VALIDATION_FAILED'));
+            } else {
+                $errorCode = null;
+            }
 
             return $this->apiBadRequest($errors, true, $errorCode);
         }

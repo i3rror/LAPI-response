@@ -1,8 +1,10 @@
 # Return API Response
 
 [![Latest Version](https://img.shields.io/github/v/release/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
-[![GitHub file size in bytes](https://img.shields.io/github/size/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
+[![GitHub repo size](https://img.shields.io/github/repo-size/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
 [![GitHub](https://img.shields.io/github/license/i3rror/LAPI-response)](https://img.shields.io/github/license/i3rror/LAPI-response)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
+
 
 This package can return all sorts of responses for API
 
@@ -21,7 +23,7 @@ MA\LaravelApiResponse\Providers\APIResponseProvider::class
 After that you can publish the config.
 
 ```cmd
-php artisan vendor:publish --provider="MA\LaravelApiResponse\Providers\APIResponseProvider" --tag="config"
+php artisan vendor:publish --provider="MA\LaravelApiResponse\Providers\APIResponseProvider" --tag="lapi-response"
 ```
 
 Then it's done!
@@ -313,17 +315,24 @@ $this->apiPaginate($pagination, bool $reverse_data = false)
 First parameter is paginated model, And the second parameter is to whether reverse the data or keep it at its order.
 
  ```php
-$this->apiException($errors = null, bool $throw_exception = true)
-$this->apiNotFound($errors = null, bool $throw_exception = true)
-$this->apiBadRequest($errors = null, bool $throw_exception = true)
+$this->apiException($errors = null, bool $throw_exception = true, $errorCode = null)
+$this->apiNotFound($errors = null, bool $throw_exception = true, $errorCode = null)
+$this->apiBadRequest($errors = null, bool $throw_exception = true, $errorCode = null)
  ```
+1. The first parameter is for errors as it can be set as string or array.
+2. The second parameter determines whether to throw exception or not, default is true.
+3. The third parameter is for error code to be returned with response, it can either be an integer, string, null or UnitEnum instance
 
-First parameter is for errors, and it can be set as string or array, And the second parameter is whether to throw
-exception or not.
+**IMPORTANT**
+<br>
+If error code is set to `null` it will return default error code if config `returnDefaultErrorCodes` is set to `true`
 
 **Return api forbidden error:**
 
 The first param is for message and can be set as null, The second one is for errors can be either array, string or null.
+1. The first parameter is for message as it can be set as string or null.
+2. The second parameter is for errors as it can be set as string or array.
+3. The third parameter is for error code to be returned with response, it can either be an integer, string, null or UnitEnum instance
 
 Default message is **Forbidden**
 
@@ -332,7 +341,7 @@ Default message is **Forbidden**
 return $this->apiForbidden('TEST MESSAGE', [
             'error_1' => 'asdasasdasd',
             'error_2' => 'asdasdasdasd'
-        ]);
+        ], 'FORBIDDEN');
 ```
 
 Response:
@@ -343,6 +352,7 @@ Response:
   "timestamp": 1723864903,
   "message": "TEST MESSAGE",
   "data": null,
+  "errorCode": "FORBIDDEN",
   "errors": {
     "error_1": "asdasasdasd",
     "error_2": "asdasdasdasd"
@@ -361,7 +371,7 @@ Default message is **Unauthenticated**
 return $this->apiUnauthenticated('TEST MESSAGE', [
             'error_1' => 'asdasasdasd',
             'error_2' => 'asdasdasdasd'
-        ]);
+        ], 'UNAUTHORIZED_ACCESS');
 ```
 
 Response:
@@ -372,6 +382,7 @@ Response:
   "timestamp": 1723864903,
   "message": "TEST MESSAGE",
   "data": null,
+  "errorCode": "UNAUTHORIZED_ACCESS",
   "errors": {
     "error_1": "asdasasdasd",
     "error_2": "asdasdasdasd"
@@ -430,7 +441,23 @@ Response:
     ]
 }
 ```
+### For error codes in config file
+1. [x] Enable or disable it.
+2. [x] Set error code enum class or maybe your custom enum class.
+3. [x] Set error codes output type (string or integer).
+4. [x] Enable or disable returning default error codes if set as null.
+5. [x] Set error codes defaults for error functions.
 
+### In order to publish the ErrorCodesEnum class
+```cmd
+php artisan lapi-response:publish-error-codes
+```
+You can also specify the class name if you want
+
+```cmd
+php artisan lapi-response:publish-error-codes CustomErrorCodesEnum
+```
+Otherwise it will generate it with the default class name as **ErrorCodesEnum**
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
