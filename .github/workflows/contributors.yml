@@ -21,7 +21,7 @@ jobs:
           SOURCE_GITHUB_REPOSITORY: i3rror/LAPI-response
           CONTRIBUTORS_SECTION_PATTERN: "## Contributors"
           CONTRIBUTORS_SECTION_END_PATTERN: "## Contributions"
-          INPUT_TEMPLATE_FILE: ./.github/assets/minimal.md
+          INPUT_TEMPLATE_FILE: ./.github/workflows/assets/minimal.md
           FILE_WITH_PATTERN: ./README.md
       - name: Create Pull Request with new backend contributors
         uses: peter-evans/create-pull-request@v3
