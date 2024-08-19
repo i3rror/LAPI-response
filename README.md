@@ -522,6 +522,7 @@ php artisan lapi-response:publish-error-codes CustomErrorCodesEnum
 ```
 
 Otherwise it will generate it with the default class name as **ErrorCodesEnum**
+## Contributors
 
 ## License
 
