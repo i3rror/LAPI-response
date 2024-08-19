@@ -1,24 +1,35 @@
-name: Contributors
+name: Update Contributors
+
 on:
   schedule:
-    - cron: '0 1 * * 0' # At 01:00 on Sunday.
-  push:
-    branches:
-      - dev
+    - cron: '0 3,9,15,21 * * *'
+  workflow_dispatch:
+
 jobs:
-  contributors:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: wow-actions/contributors-list@v1
+      - name: Clone the repository
+        uses: "actions/checkout@v2"
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          round: true
-          includeBots: false
-          noCommit: true
-          itemTemplate: >
-            <g transform="translate({{ x }}, {{ y }})">
-              <a xlink:href="{{{ url }}}" class="contributor-link" target="_blank" rel="nofollow sponsored" title="{{{ name }}}" id="{{{ name }}}">
-                <image width="{{ width }}" height="{{ height }}" xlink:href="{{{ avatar }}}" />
-                <text x="32" y="74" text-anchor="middle" alignment-baseline="middle" font-size="10">{{{ name }}}</text>
-              </a>
-            </g>
+          submodules: recursive
+      - name: Get contributors information
+        uses: "hyperledger-tooling/github-contributors-action@main"
+        env:
+          GITHUB_AUTH_TOKEN: "${{ secrets.PAT }}"
+          SOURCE_GITHUB_REPOSITORY: i3rror/LAPI-response
+          CONTRIBUTORS_SECTION_PATTERN: "## Contributors"
+          CONTRIBUTORS_SECTION_END_PATTERN: "## Contributions"
+          INPUT_TEMPLATE_FILE: ./.github/assets/minimal.md
+          FILE_WITH_PATTERN: ./README.md
+      - name: Create Pull Request with new backend contributors
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.PAT }}
+          branch-suffix: timestamp
+          title: Update Contributors
+          labels: automerge
+          signoff: true
+          delete-branch: false
+          commit-message: Update Contributors
