@@ -523,6 +523,27 @@ php artisan lapi-response:publish-error-codes CustomErrorCodesEnum
 
 Otherwise it will generate it with the default class name as **ErrorCodesEnum**
 
+## Contributors
+
+<table>
+<tr>
+    <td align="center" style="word-wrap: break-word; width: 72.0; height: 72.0">
+        <a href=https://github.com/Ahmed-Elrayes>
+            <img src=https://avatars.githubusercontent.com/u/30704271?v=4 width="48;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Ahmed Elrayes/>
+            <br />
+            <sub style="font-size:14px"><b>Ahmed Elrayes</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 72.0; height: 72.0">
+        <a href=https://github.com/i3rror>
+            <img src=https://avatars.githubusercontent.com/u/26237098?v=4 width="48;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Mohamed Aboushady/>
+            <br />
+            <sub style="font-size:14px"><b>Mohamed Aboushady</b></sub>
+        </a>
+    </td>
+</tr>
+</table>
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
