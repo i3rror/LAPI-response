@@ -1,35 +1,18 @@
-name: Update Contributors
-
+name: Contributors
 on:
   schedule:
-    - cron: '0 3,9,15,21 * * *'
-  workflow_dispatch:
-
+    - cron: '0 1 * * 0' # At 01:00 on Sunday.
+  push:
+    branches:
+      - dev
 jobs:
-  build:
+  contributors:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Clone the repository
-        uses: "actions/checkout@v2"
-        with:
-          submodules: recursive
-      - name: Get contributors information
-        uses: "hyperledger-tooling/github-contributors-action@main"
+      - uses: hyperledger-tooling/github-contributors-action@v0.0.1
         env:
-          GITHUB_AUTH_TOKEN: "${{ secrets.PAT }}"
-          SOURCE_GITHUB_REPOSITORY: i3rror/LAPI-response
-          CONTRIBUTORS_SECTION_PATTERN: "## Contributors"
-          CONTRIBUTORS_SECTION_END_PATTERN: "## Contributions"
-          INPUT_TEMPLATE_FILE: ./.github/workflows/assets/minimal.md
+          GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONTRIBUTORS_SECTION_PATTERN: "# # Contributors"
+          CONTRIBUTORS_SECTION_END_PATTERN: "## License"
+          INPUT_TEMPLATE_FILE: "./.github/assets/minimal.md"
           FILE_WITH_PATTERN: ./README.md
-      - name: Create Pull Request with new backend contributors
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.PAT }}
-          branch-suffix: timestamp
-          title: Update Contributors
-          labels: automerge
-          signoff: true
-          delete-branch: false
-          commit-message: Update Contributors
