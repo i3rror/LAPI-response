@@ -4,7 +4,6 @@ on:
     - cron: '0 1 * * 0' # At 01:00 on Sunday.
   push:
     branches:
-      - main
       - dev
 jobs:
   contributors:
@@ -14,6 +13,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           round: true
+          includeBots: false
           itemTemplate: >
             <g transform="translate({{ x }}, {{ y }})">
               <a xlink:href="{{{ url }}}" class="contributor-link" target="_blank" rel="nofollow sponsored" title="{{{ name }}}" id="{{{ name }}}">
