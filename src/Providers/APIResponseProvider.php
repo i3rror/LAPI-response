@@ -3,6 +3,7 @@
 namespace MA\LaravelApiResponse\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use MA\LaravelApiResponse\Console\PublishErrorCodesEnumCommand;
 
 class APIResponseProvider extends ServiceProvider
 {
@@ -27,14 +28,17 @@ class APIResponseProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../config/response.php' => config_path('response.php'),
             ], 'lapi-response-config');
+            $this->commands([
+                PublishErrorCodesEnumCommand::class,
+            ]);
         }
-        if(class_exists('\Illuminate\Foundation\Exceptions\Handler')){
+        if (class_exists('\Illuminate\Foundation\Exceptions\Handler')) {
             $this->app->singleton(
                 \Illuminate\Contracts\Debug\ExceptionHandler::class,
                 \MA\LaravelApiResponse\Exceptions\Handler::class
             );
         }
-        if(class_exists('\Laravel\Lumen\Exceptions\Handler')){
+        if (class_exists('\Laravel\Lumen\Exceptions\Handler')) {
             $this->app->singleton(
                 \Illuminate\Contracts\Debug\ExceptionHandler::class,
                 \MA\LaravelApiResponse\Exceptions\LumenHandler::class
