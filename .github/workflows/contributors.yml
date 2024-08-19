@@ -14,5 +14,4 @@ jobs:
           GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CONTRIBUTORS_SECTION_PATTERN: "# # Contributors"
           CONTRIBUTORS_SECTION_END_PATTERN: "## License"
-          INPUT_TEMPLATE_FILE: "./.github/assets/minimal.md"
           FILE_WITH_PATTERN: ./README.md
