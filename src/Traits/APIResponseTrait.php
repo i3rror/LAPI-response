@@ -20,9 +20,9 @@ trait APIResponseTrait
     /**
      * The ok response
      * @param $data
-     * @return Application|ResponseFactory|Res
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiOk($data): Res|Application|ResponseFactory
+    public function apiOk($data): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         return $this->apiResponse([
             'data' => $data,
@@ -34,9 +34,9 @@ trait APIResponseTrait
      * @param null $errors
      * @param bool $throw_exception
      * @param string|int|UnitEnum|null $errorCode
-     * @return Application|ResponseFactory|Res
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiNotFound($errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
+    public function apiNotFound($errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -64,9 +64,9 @@ trait APIResponseTrait
      * @param null $errors
      * @param bool $throw_exception
      * @param string|int|null|UnitEnum $errorCode
-     * @return Application|ResponseFactory|Res
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiBadRequest($errors = null, bool $throw_exception = true, string|int|null|UnitEnum $errorCode = null): Res|Application|ResponseFactory
+    public function apiBadRequest($errors = null, bool $throw_exception = true, string|int|null|UnitEnum $errorCode = null): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -94,9 +94,9 @@ trait APIResponseTrait
      * @param null $errors
      * @param bool $throw_exception
      * @param string|int|UnitEnum|null $errorCode
-     * @return Application|ResponseFactory|Res
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiException($errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
+    public function apiException($errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -124,9 +124,9 @@ trait APIResponseTrait
      * @param null $message
      * @param array|string|null $errors
      * @param string|int|UnitEnum|null $errorCode
-     * @return Application|ResponseFactory|Res
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiUnauthenticated($message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
+    public function apiUnauthenticated($message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -155,9 +155,9 @@ trait APIResponseTrait
      * @param null $message
      * @param array|string|null $errors
      * @param string|int|UnitEnum|null $errorCode
-     * @return Application|ResponseFactory|Res
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiForbidden($message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null): Res|Application|ResponseFactory
+    public function apiForbidden($message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         // Set errors
         if (!is_null($errors)) {
@@ -185,9 +185,9 @@ trait APIResponseTrait
      * Paginate data
      * @param AnonymousResourceCollection|LengthAwarePaginator $pagination
      * @param bool $reverse_data
-     * @return Application|ResponseFactory|Res
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, bool $reverse_data = false): Res|Application|ResponseFactory
+    public function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, bool $reverse_data = false): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         // Set pagination data
         $isFirst = $pagination->onFirstPage();
@@ -255,9 +255,9 @@ trait APIResponseTrait
      * @param $roles
      * @param array $messages
      * @param array $customAttributes
-     * @return array|Application|ResponseFactory|Res
+     * @return array|Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiValidate(array|Request $data, $roles, array $messages = [], array $customAttributes = []): Res|array|Application|ResponseFactory
+    public function apiValidate(array|Request $data, $roles, array $messages = [], array $customAttributes = []): Res|StreamedJsonResponse|array|Application|ResponseFactory
     {
         // Check if data is a request instance
         if ($data instanceof Request) {
@@ -289,9 +289,9 @@ trait APIResponseTrait
     /**
      * Die and debug
      * @param $data
-     * @return Application|ResponseFactory|Res
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiDD($data): Res|Application|ResponseFactory
+    public function apiDD($data): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         return $this->apiResponse([
             'type' => 'Exception',
@@ -305,7 +305,7 @@ trait APIResponseTrait
      * @param Generator $generator
      * @param string|null $message
      * @param int $statusCode
-     * @return Application|ResponseFactory|Res|StreamedJsonResponse
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
     public function apiStreamResponse(Generator $generator, string $message = null, int $statusCode = Res::HTTP_OK): Res|StreamedJsonResponse|Application|ResponseFactory
     {
@@ -321,9 +321,9 @@ trait APIResponseTrait
      * @param array|string|null $arg [type, filter_data, throw_exception, message, data]
      * @param null $data
      * @param array $guards
-     * @return Application|ResponseFactory|Res
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiResponse(array|string $arg = null, $data = null, array $guards = []): Res|Application|ResponseFactory
+    public function apiResponse(array|string $arg = null, $data = null, array $guards = []): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         // Set attributes
         $type = isset($arg['type']) && !!$this->checkGetType($arg['type']) ? $arg['type'] : null;
@@ -394,9 +394,9 @@ trait APIResponseTrait
      * @param int $status_code
      * @param null|UnitEnum|int|string $errorCode
      * @param bool $isStream
-     * @return Res|ResponseFactory|StreamedJsonResponse
+     * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK, null|UnitEnum|int|string $errorCode = null, bool $isStream = false)
+    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK, null|UnitEnum|int|string $errorCode = null, bool $isStream = false): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         // Filter data[]
         $data = (is_array($data) && config('response.removeNullDataValues', false) ? $this->removeNullArrayValues($data) : $data);
