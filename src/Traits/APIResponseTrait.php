@@ -2,6 +2,7 @@
 
 namespace MA\LaravelApiResponse\Traits;
 
+use Generator;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -11,6 +12,7 @@ use Illuminate\Http\Response as Res;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
 use MA\LaravelApiResponse\Enums\ErrorCodesEnum;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use UnitEnum;
 
 trait APIResponseTrait
@@ -300,6 +302,22 @@ trait APIResponseTrait
     }
 
     /**
+     * @param Generator $generator
+     * @param string|null $message
+     * @param int $statusCode
+     * @return Application|ResponseFactory|Res
+     */
+    public function apiStreamResponse(Generator $generator, ?string $message = null, int $statusCode = Res::HTTP_OK): Res|Application|ResponseFactory
+    {
+        return $this->apiResponse([
+            'errorCode' => $statusCode,
+            'message' => $message,
+            'data' => $generator,
+            'isStream' => true,
+        ]);
+    }
+
+    /**
      * @param array|string|null $arg [type, filter_data, throw_exception, message, data]
      * @param null $data
      * @param array $guards
@@ -313,6 +331,7 @@ trait APIResponseTrait
         $throw_exception = !isset($arg['throw_exception']) || (bool)$arg['throw_exception'];
         $message = $arg['message'] ?? null;
         $errorCode = $arg['errorCode'] ?? null;
+        $isStream = $arg['isStream'] ?? false;
 
         // Handle type
         if (is_null($type) && (!is_null($arg) && !is_array($arg) && !is_null($data))) {
@@ -354,9 +373,9 @@ trait APIResponseTrait
 
         // Check if errors
         if (isset($arg['errors'])) {
-            $response = $this->apiRawResponse($data, $message, $arg['errors'], $status_code, $errorCode);
+            $response = $this->apiRawResponse($data, $message, $arg['errors'], $status_code, $errorCode, $isStream);
         } else {
-            $response = $this->apiRawResponse($data, $message, [], $status_code, $errorCode);
+            $response = $this->apiRawResponse($data, $message, [], $status_code, $errorCode, $isStream);
         }
 
         // Throw exceptions
@@ -374,9 +393,10 @@ trait APIResponseTrait
      * @param array $extra
      * @param int $status_code
      * @param null|UnitEnum|int|string $errorCode
-     * @return Application|ResponseFactory|Res
+     * @param bool $isStream
+     * @return Res|ResponseFactory|StreamedJsonResponse
      */
-    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK, null|UnitEnum|int|string $errorCode = null): Res|Application|ResponseFactory
+    private function apiRawResponse(mixed $data = null, $message = null, array $extra = [], int $status_code = Res::HTTP_OK, null|UnitEnum|int|string $errorCode = null, bool $isStream = false)
     {
         // Filter data[]
         $data = (is_array($data) && config('response.removeNullDataValues', false) ? $this->removeNullArrayValues($data) : $data);
@@ -427,7 +447,7 @@ trait APIResponseTrait
             $response = $this->arrayMergeRecursiveDistinct($response, $extra);
         }
 
-        return response($response, $status_code);
+        return $isStream ? response()->streamJson($response) : response($response, $status_code);
     }
 
     /**
