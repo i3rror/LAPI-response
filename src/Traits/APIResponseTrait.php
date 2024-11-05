@@ -447,7 +447,7 @@ trait APIResponseTrait
             $response = $this->arrayMergeRecursiveDistinct($response, $extra);
         }
 
-        return $isStream ? response()->streamJson($response) : response($response, $status_code);
+        return $isStream ? response()->streamJson($response, $status_code) : response($response, $status_code);
     }
 
     /**
