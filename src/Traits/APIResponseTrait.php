@@ -310,7 +310,7 @@ trait APIResponseTrait
     public function apiStreamResponse(Generator $generator, ?string $message = null, int $statusCode = Res::HTTP_OK): Res|Application|ResponseFactory
     {
         return $this->apiResponse([
-            'errorCode' => $statusCode,
+            'status_code' => $statusCode,
             'message' => $message,
             'data' => $generator,
             'isStream' => true,
