@@ -305,9 +305,9 @@ trait APIResponseTrait
      * @param Generator $generator
      * @param string|null $message
      * @param int $statusCode
-     * @return Application|ResponseFactory|Res
+     * @return Application|ResponseFactory|Res|StreamedJsonResponse
      */
-    public function apiStreamResponse(Generator $generator, ?string $message = null, int $statusCode = Res::HTTP_OK): Res|Application|ResponseFactory
+    public function apiStreamResponse(Generator $generator, string $message = null, int $statusCode = Res::HTTP_OK): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         return $this->apiResponse([
             'status_code' => $statusCode,
