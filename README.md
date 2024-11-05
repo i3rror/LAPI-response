@@ -180,7 +180,56 @@ Response:
 }
 ```
 
-There are also more types such as not found exception
+### API stream response
+in this code it requires the first parameter as Generator class
+- Generator is required
+- Message is optional
+- Status code is optional
+```php
+// Return api stream response
+public function index()
+{
+    // Message and status code are optional
+    return $this->apiStreamResponse($this->yieldUsers(), "Test Message", 200);
+}
+
+protected function yieldUsers(): Generator
+{
+  foreach (User::query()->cursor() as $user) {
+      yield $user;
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1662105038,
+  "message": "Test Message",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test User",
+      "email": "test-user-email@email.com"
+    },
+    {
+      "id": 2,
+      "name": "Test User 2",
+      "email":  "test-user-email@email2.com"
+    },
+    {
+      "id": 3,
+      "name": "Test User 3",
+      "email":  "test-user-email@email3.com"
+    }
+  ]
+}
+```
+
+### There are also more types such as not found exception
 
 ```php
 return $this->apiResponse([
@@ -291,7 +340,7 @@ Response:
 }
 ```
 
-You can use a pagination response as example:
+### Pagination response
 
 ```php
 $tests = Tests::query()
