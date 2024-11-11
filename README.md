@@ -1,44 +1,47 @@
-# Return API Response
+# Laravel API Response
 
 [![Latest Version](https://img.shields.io/github/v/release/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
 [![GitHub repo size](https://img.shields.io/github/repo-size/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
 [![GitHub](https://img.shields.io/github/license/i3rror/LAPI-response)](https://img.shields.io/github/license/i3rror/LAPI-response)
 [![Packagist Downloads](https://img.shields.io/packagist/dt/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
 
-This package can return all sorts of responses for API
+This package provides comprehensive functionality for handling and returning all types of API responses in Laravel applications. It offers consistent response formatting, error handling, and pagination support.
 
-How to use this package:
+## Installation and Setup
 
-```cmd
+### Step 1: Install via Composer
+```bash
 composer require i3rror/LAPI-response
 ```
 
-Then include its service provider to your `config/app.php`
-
-```cmd
+### Step 2: Register Service Provider
+Include the service provider in your `config/app.php`:
+```php
 MA\LaravelApiResponse\Providers\APIResponseProvider::class
 ```
 
-After that you can publish the config.
-
-```cmd
+### Step 3: Publish Configuration
+Run the following command to publish the package configuration:
+```bash
 php artisan vendor:publish --provider="MA\LaravelApiResponse\Providers\APIResponseProvider" --tag="lapi-response"
 ```
 
-Then it's done!
+## Basic Implementation
 
-In order to use this package you need to use this code inside your controllers
+To utilize this package, you'll need to use the APIResponseTrait in your controllers:
 
 ```php
 use APIResponseTrait;
 ```
 
-There are two ways to use this package
+You have two implementation options:
 
-1. Use it globally by adding using this code inside ``App\Http\Controllers\Controller.php``
-2. Use it internally by adding the use code inside the controller you want to use it in.
+1. **Global Implementation**: Add the trait to `App\Http\Controllers\Controller.php` to make it available across all controllers
+2. **Local Implementation**: Add the trait only to specific controllers where API responses are needed
 
-Here are a few short examples of what you can do:
+## Usage Examples
+
+### Basic Response Example
 
 ```php
 use MA\LaravelApiResponse\Traits\APIResponseTrait;
@@ -70,8 +73,7 @@ class TestController extends Controller
 }
 ```
 
-Expected response
-
+Expected response:
 ```json
 {
   "status": true,
@@ -95,20 +97,21 @@ Expected response
 }
 ```
 
-You can use short params values (If it's string then it will be set as message, And if it's array then it will be set as
-data)
-Message:
+### Simplified Parameter Usage
 
+You can use short parameter values in two ways:
+- String parameters are set as messages
+- Array parameters are set as data
+
+#### Message Example:
 ```php
 return $this->apiOk("test message");
 
-// Or
-
+// Or alternatively
 return $this->apiResponse("test message");
 ```
 
-Responses:
-
+Response:
 ```json
 {
   "status": true,
@@ -119,8 +122,7 @@ Responses:
 }
 ```
 
-Data:
-
+#### Data Example:
 ```php
 return $this->apiOk([
     [
@@ -137,8 +139,7 @@ return $this->apiOk([
     ],
 ]);
 
-// Or
-
+// Or alternatively
 return $this->apiResponse([
     [
         'id' => 1,
@@ -156,7 +157,6 @@ return $this->apiResponse([
 ```
 
 Response:
-
 ```json
 {
   "status": true,
@@ -180,11 +180,12 @@ Response:
 }
 ```
 
-### API stream response
-in this code it requires the first parameter as Generator class
+### API Stream Response
+The stream response feature requires a Generator class as the first parameter:
 - Generator is required
 - Message is optional
 - Status code is optional
+
 ```php
 // Return api stream response
 public function index()
@@ -195,14 +196,13 @@ public function index()
 
 protected function yieldUsers(): Generator
 {
-  foreach (User::query()->cursor() as $user) {
-      yield $user;
-  }
+    foreach (User::query()->cursor() as $user) {
+        yield $user;
+    }
 }
 ```
 
 Response:
-
 ```json
 {
   "status": true,
@@ -229,19 +229,20 @@ Response:
 }
 ```
 
-### There are also more types such as not found exception
+### Error Handling
 
+#### Not Found Exception
 ```php
 return $this->apiResponse([
     'type' => 'notfound', // 'type' => 404,
 ]);
 ```
 
-* You can also add dash between the words such as `not-found`.
-* Or even write **status code as 404**
+Important Notes:
+* You can use dash-separated words (e.g., 'not-found')
+* Status codes can be used directly (e.g., 404)
 
 Response:
-
 ```json
 {
   "status": false,
@@ -252,8 +253,7 @@ Response:
 }
 ```
 
-There is a list of all status strings you can use **(otherwise you can use status code)**
-
+### Available Status Types
 * created
 * accepted
 * notfound
@@ -264,18 +264,17 @@ There is a list of all status strings you can use **(otherwise you can use statu
 * unauthorized
 * ok
 
-These are all the arguments you can send in apiResponse function
+### API Response Parameters
+The apiResponse function accepts the following arguments:
 
-1. type => the types we wrote earlier.
-2. filter_data => boolean.
-3. throw_exception => boolean.
-4. message => string.
-5. errorCode => Check `MA\LaravelApiResponse\Enums\ErrorCodesEnum`, you can either send it as integer, string or
-   UnitEnum.
-6. status_code => integer (it will be applied only of type is not sent).
+1. `type` => Response type (from the types listed above)
+2. `filter_data` => boolean
+3. `throw_exception` => boolean
+4. `message` => string
+5. `errorCode` => Check MA\LaravelApiResponse\Enums\ErrorCodesEnum (can be integer, string, or UnitEnum)
+6. `status_code` => integer (applies only if type is not sent)
 
-**as example**
-
+Example with Error Code:
 ```php
 /*
 * Error code examples:
@@ -290,12 +289,11 @@ return $this->apiResponse([
     'filter_data' => true,
     'throw_exception' => true,
     'message' => 'TestMessage',
-    'errorCode' => 'INVALID_CREDENTIALS', // you can make it string, integer or UnitEnum
+    'errorCode' => 'INVALID_CREDENTIALS', // can be string, integer or UnitEnum
 ]);
 ```
 
 Response:
-
 ```json
 {
   "status": false,
@@ -307,7 +305,7 @@ Response:
 }
 ```
 
-**There is validation function as example:**
+### Validation Support
 
 ```php
 $data = $this->apiValidate($request, [
@@ -316,10 +314,9 @@ $data = $this->apiValidate($request, [
 ]);
 ```
 
-**Note that you can either pass `Illuminate\Http\Request` Or `Array` as first parameter**
+Note: The first parameter can be either `Illuminate\Http\Request` or an array
 
-Response:
-
+Response for validation failure:
 ```json
 {
   "status": false,
@@ -340,7 +337,7 @@ Response:
 }
 ```
 
-### Pagination response
+### Pagination Support
 
 ```php
 $tests = Tests::query()
@@ -351,7 +348,6 @@ return $this->apiPaginateResponse($tests);
 ```
 
 Response:
-
 ```json
 {
   "status": true,
@@ -404,51 +400,48 @@ Response:
 }
 ```
 
-#### **List of all methods that can be used:**
+### Available Methods
 
- ```php
+```php
 $this->apiPaginate($pagination, bool $reverse_data = false)
- ```
+```
+Parameters:
+- First parameter: paginated model
+- Second parameter: whether to reverse the data or maintain original order
 
-First parameter is paginated model, And the second parameter is to whether reverse the data or keep it at its order.
-
- ```php
+Error Handling Methods:
+```php
 $this->apiException($errors = null, bool $throw_exception = true, $errorCode = null)
 $this->apiNotFound($errors = null, bool $throw_exception = true, $errorCode = null)
 $this->apiBadRequest($errors = null, bool $throw_exception = true, $errorCode = null)
- ```
+```
 
-1. The first parameter is for errors as it can be set as string or array.
-2. The second parameter determines whether to throw exception or not, default is true.
-3. The third parameter is for error code to be returned with response, it can either be an integer, string, null or
-   UnitEnum instance
+Parameters:
+1. First parameter: errors (string or array)
+2. Second parameter: whether to throw exception (default: true)
+3. Third parameter: error code (integer, string, null, or UnitEnum instance)
 
-**IMPORTANT**
-<br>
-If error code is set to `null` it will return default error code if config `returnDefaultErrorCodes` is set to `true`
+**IMPORTANT**: If error code is null, it will return the default error code if config `returnDefaultErrorCodes` is true
 
-**Return api forbidden error:**
-
-The first param is for message and can be set as null, The second one is for errors can be either array, string or null.
-
-1. The first parameter is for message as it can be set as string or null.
-2. The second parameter is for errors as it can be set as string or array.
-3. The third parameter is for error code to be returned with response, it can either be an integer, string, null or
-   UnitEnum instance
-
-Default message is **Forbidden**
-
-**PS: if errors is null it won't show errors property in response**
+### Forbidden Error Response
 
 ```php
 return $this->apiForbidden('TEST MESSAGE', [
-            'error_1' => 'asdasasdasd',
-            'error_2' => 'asdasdasdasd'
-        ], 'FORBIDDEN');
+    'error_1' => 'asdasasdasd',
+    'error_2' => 'asdasdasdasd'
+], 'FORBIDDEN');
 ```
 
-Response:
+Parameters:
+1. First parameter: message (string or null)
+2. Second parameter: errors (string, array, or null)
+3. Third parameter: error code (integer, string, null, or UnitEnum instance)
 
+Default message is "Forbidden"
+
+Note: If errors is null, the errors property won't appear in the response
+
+Response:
 ```json
 {
   "status": false,
@@ -464,23 +457,23 @@ Response:
 }
 ```
 
-**Return api unauthenticated error:**
-
-The first param is for message and can be set as null, The second one is for errors can be either array, string or null.
-
-Default message is **Unauthenticated**
-
-**PS: if errors is null it won't show errors property in response**
+### Unauthenticated Error Response
 
 ```php
 return $this->apiUnauthenticated('TEST MESSAGE', [
-            'error_1' => 'asdasasdasd',
-            'error_2' => 'asdasdasdasd'
-        ], 'UNAUTHORIZED_ACCESS');
+    'error_1' => 'asdasasdasd',
+    'error_2' => 'asdasdasdasd'
+], 'UNAUTHORIZED_ACCESS');
 ```
 
-Response:
+Parameters:
+- First parameter: message (string or null)
+- Second parameter: errors (array, string, or null)
+- Default message: "Unauthenticated"
 
+Note: If errors is null, the errors property won't appear in the response
+
+Response:
 ```json
 {
   "status": false,
@@ -496,17 +489,21 @@ Response:
 }
 ```
 
-**There is api Validate**
+### API Validation
 
- ```php
+```php
 $this->apiValidate($data, $roles, array $messages = [], array $customAttributes = [])
- ```
+```
 
-Same as Laravel `This->validate()` method first parameter is for data and the second one is for roles and the 3rd one
-for messages and the last one is for custom attributes.
-it should return the values of the validated data if passed or will throw exception using this trait if it failed.
+Follows Laravel's validate() method pattern:
+- First parameter: data
+- Second parameter: roles
+- Third parameter: messages
+- Fourth parameter: custom attributes
 
-There is die and dump data method
+Returns validated data on success or throws an exception using this trait on failure.
+
+### Debug Helper
 
 ```php
 return $this->apiDD([
@@ -526,7 +523,6 @@ return $this->apiDD([
 ```
 
 Response:
-
 ```json
 {
   "status": false,
@@ -550,27 +546,29 @@ Response:
 }
 ```
 
-### For error codes in config file
+### Error Codes Configuration
 
-1. [x] Enable or disable it.
-2. [x] Set error code enum class or maybe your custom enum class.
-3. [x] Set error codes output type (string or integer).
-4. [x] Enable or disable returning default error codes if set as null.
-5. [x] Set error codes defaults for error functions.
+The package provides extensive error code configuration options:
 
-### In order to publish the ErrorCodesEnum class
+1. Enable/disable error codes
+2. Set error code enum class or custom enum class
+3. Set error codes output type (string or integer)
+4. Enable/disable returning default error codes if set as null
+5. Set error codes defaults for error functions
 
-```cmd
+### Publishing Error Codes Enum
+
+Basic usage:
+```bash
 php artisan lapi-response:publish-error-codes
 ```
 
-You can also specify the class name if you want
-
-```cmd
+With custom class name:
+```bash
 php artisan lapi-response:publish-error-codes CustomErrorCodesEnum
 ```
 
-Otherwise it will generate it with the default class name as **ErrorCodesEnum**
+If no custom name is specified, it will generate with the default class name "ErrorCodesEnum"
 
 ## Contributors
 
@@ -583,16 +581,4 @@ Otherwise it will generate it with the default class name as **ErrorCodesEnum**
             <sub style="font-size:14px"><b>Ahmed Elrayes</b></sub>
         </a>
     </td>
-    <td align="center" style="word-wrap: break-word; width: 72.0; height: 72.0">
-        <a href=https://github.com/i3rror>
-            <img src=https://avatars.githubusercontent.com/u/26237098?v=4 width="48;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Mohamed Aboushady/>
-            <br />
-            <sub style="font-size:14px"><b>Mohamed Aboushady</b></sub>
-        </a>
-    </td>
-</tr>
-</table>
-
-## License
-
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+    <td align="
