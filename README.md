@@ -1,45 +1,47 @@
-# Laravel API Response Package
+# Laravel API Response
 
 [![Latest Version](https://img.shields.io/github/v/release/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
 [![GitHub repo size](https://img.shields.io/github/repo-size/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
 [![GitHub](https://img.shields.io/github/license/i3rror/LAPI-response)](https://img.shields.io/github/license/i3rror/LAPI-response)
 [![Packagist Downloads](https://img.shields.io/packagist/dt/i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/releases)
 
-A comprehensive package for handling various API response types in Laravel applications.
+This package provides comprehensive functionality for handling and returning all types of API responses in Laravel applications. It offers consistent response formatting, error handling, and pagination support.
 
-## Installation
+## Installation and Setup
 
-1. Install via Composer:
+### Step 1: Install via Composer
 ```bash
 composer require i3rror/LAPI-response
 ```
 
-2. Add the service provider to `config/app.php`:
+### Step 2: Register Service Provider
+Include the service provider in your `config/app.php`:
 ```php
 MA\LaravelApiResponse\Providers\APIResponseProvider::class
 ```
 
-3. Publish the configuration:
+### Step 3: Publish Configuration
+Run the following command to publish the package configuration:
 ```bash
 php artisan vendor:publish --provider="MA\LaravelApiResponse\Providers\APIResponseProvider" --tag="lapi-response"
 ```
 
-## Usage
+## Basic Implementation
 
-To use this package, import the trait in your controllers:
+To utilize this package, you'll need to use the APIResponseTrait in your controllers:
 
 ```php
 use APIResponseTrait;
 ```
 
-### Implementation Options
+You have two implementation options:
 
-1. **Global Implementation**: Add the trait to `App\Http\Controllers\Controller.php`
-2. **Local Implementation**: Add the trait only to specific controllers where needed
+1. **Global Implementation**: Add the trait to `App\Http\Controllers\Controller.php` to make it available across all controllers
+2. **Local Implementation**: Add the trait only to specific controllers where API responses are needed
 
-## Basic Examples
+## Usage Examples
 
-### Simple Response
+### Basic Response Example
 
 ```php
 use MA\LaravelApiResponse\Traits\APIResponseTrait;
@@ -64,62 +66,131 @@ class TestController extends Controller
                 [
                     'id' => 3,
                     'name' => 'Test Name 3',
-                ]
+                ],
             ]
         ]);
     }
 }
 ```
 
-Expected Response:
+Expected response:
 ```json
 {
-    "status": true,
-    "statusCode": 200,
-    "timestamp": 1662070087,
-    "message": "Test Message",
-    "data": [
-        {
-            "id": 1,
-            "name": "Test Name"
-        },
-        {
-            "id": 2,
-            "name": "Test Name 2"
-        },
-        {
-            "id": 3,
-            "name": "Test Name 3"
-        }
-    ]
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1662070087,
+  "message": "Test Message",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test Name"
+    },
+    {
+      "id": 2,
+      "name": "Test Name 2"
+    },
+    {
+      "id": 3,
+      "name": "Test Name 3"
+    }
+  ]
 }
 ```
 
 ### Simplified Parameter Usage
 
-#### Message Only
+You can use short parameter values in two ways:
+- String parameters are set as messages
+- Array parameters are set as data
+
+#### Message Example:
 ```php
 return $this->apiOk("test message");
-// or
+
+// Or alternatively
 return $this->apiResponse("test message");
 ```
 
-#### Data Only
+Response:
+```json
+{
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1662104853,
+  "message": "OK",
+  "data": "test message"
+}
+```
+
+#### Data Example:
 ```php
 return $this->apiOk([
-    ['id' => 1, 'name' => 'Test Name'],
-    ['id' => 2, 'name' => 'Test Name 2'],
-    ['id' => 3, 'name' => 'Test Name 3']
+    [
+        'id' => 1,
+        'name' => 'Test Name',
+    ],
+    [
+        'id' => 2,
+        'name' => 'Test Name 2',
+    ],
+    [
+        'id' => 3,
+        'name' => 'Test Name 3',
+    ],
+]);
+
+// Or alternatively
+return $this->apiResponse([
+    [
+        'id' => 1,
+        'name' => 'Test Name',
+    ],
+    [
+        'id' => 2,
+        'name' => 'Test Name 2',
+    ],
+    [
+        'id' => 3,
+        'name' => 'Test Name 3',
+    ],
 ]);
 ```
 
-### Stream Response
+Response:
+```json
+{
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1662105038,
+  "message": "OK",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test Name"
+    },
+    {
+      "id": 2,
+      "name": "Test Name 2"
+    },
+    {
+      "id": 3,
+      "name": "Test Name 3"
+    }
+  ]
+}
+```
 
-Requires a Generator class as the first parameter:
+### API Stream Response
+The stream response feature requires a Generator class as the first parameter:
+- Generator is required
+- Message is optional
+- Status code is optional
 
 ```php
+// Return api stream response
 public function index()
 {
+    // Message and status code are optional
     return $this->apiStreamResponse($this->yieldUsers(), "Test Message", 200);
 }
 
@@ -131,31 +202,110 @@ protected function yieldUsers(): Generator
 }
 ```
 
-### Error Responses
+Response:
+```json
+{
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1662105038,
+  "message": "Test Message",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test User",
+      "email": "test-user-email@email.com"
+    },
+    {
+      "id": 2,
+      "name": "Test User 2",
+      "email":  "test-user-email@email2.com"
+    },
+    {
+      "id": 3,
+      "name": "Test User 3",
+      "email":  "test-user-email@email3.com"
+    }
+  ]
+}
+```
 
-Available error types:
-- created
-- accepted
-- notfound
-- conflict
-- badrequest
-- exception
-- unauthenticated
-- unauthorized
-- ok
+### Error Handling
 
-Example:
+#### Not Found Exception
 ```php
 return $this->apiResponse([
-    'type' => 'notfound', // or 'type' => 404
-    'filter_data' => true,
-    'throw_exception' => true,
-    'message' => 'TestMessage',
-    'errorCode' => 'INVALID_CREDENTIALS'
+    'type' => 'notfound', // 'type' => 404,
 ]);
 ```
 
-### Validation
+Important Notes:
+* You can use dash-separated words (e.g., 'not-found')
+* Status codes can be used directly (e.g., 404)
+
+Response:
+```json
+{
+  "status": false,
+  "statusCode": 404,
+  "timestamp": 1662121027,
+  "message": "Not found!",
+  "data": null
+}
+```
+
+### Available Status Types
+* created
+* accepted
+* notfound
+* conflict
+* badrequest
+* exception
+* unauthenticated
+* unauthorized
+* ok
+
+### API Response Parameters
+The apiResponse function accepts the following arguments:
+
+1. `type` => Response type (from the types listed above)
+2. `filter_data` => boolean
+3. `throw_exception` => boolean
+4. `message` => string
+5. `errorCode` => Check MA\LaravelApiResponse\Enums\ErrorCodesEnum (can be integer, string, or UnitEnum)
+6. `status_code` => integer (applies only if type is not sent)
+
+Example with Error Code:
+```php
+/*
+* Error code examples:
+* THROTTLING_ERROR
+* 1021
+* ErrorCodesEnum::THROTTLING_ERROR
+* ErrorCodesEnum::THROTTLING_ERROR->name
+* ErrorCodesEnum::THROTTLING_ERROR->value
+*/
+return $this->apiResponse([
+    'type' => 'notfound',
+    'filter_data' => true,
+    'throw_exception' => true,
+    'message' => 'TestMessage',
+    'errorCode' => 'INVALID_CREDENTIALS', // can be string, integer or UnitEnum
+]);
+```
+
+Response:
+```json
+{
+  "status": false,
+  "statusCode": 404,
+  "timestamp": 1724082523,
+  "message": "TestMessage",
+  "data": null,
+  "errorCode": "INVALID_CREDENTIALS"
+}
+```
+
+### Validation Support
 
 ```php
 $data = $this->apiValidate($request, [
@@ -164,65 +314,271 @@ $data = $this->apiValidate($request, [
 ]);
 ```
 
-### Pagination Response
+Note: The first parameter can be either `Illuminate\Http\Request` or an array
+
+Response for validation failure:
+```json
+{
+  "status": false,
+  "statusCode": 400,
+  "timestamp": 1662122013,
+  "message": "Bad Request!",
+  "data": null,
+  "errors": [
+    {
+      "countryId": [
+        "The country id field is required."
+      ],
+      "email": [
+        "The email must be a valid email address."
+      ]
+    }
+  ]
+}
+```
+
+### Pagination Support
 
 ```php
 $tests = Tests::query()
-    ->where('is_active', true)
-    ->paginate(2);
-    
+        ->where('is_active', true)
+        ->paginate(2);
+        
 return $this->apiPaginateResponse($tests);
 ```
 
-## Available Methods
+Response:
+```json
+{
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1662070940,
+  "message": "OK",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test 1",
+      "is_active": true,
+      "created_at": null,
+      "updated_at": null
+    },
+    {
+      "id": 2,
+      "name": "Test 2",
+      "is_active": true,
+      "created_at": null,
+      "updated_at": null
+    }
+  ],
+  "pagination": {
+    "meta": {
+      "page": {
+        "current": 1,
+        "first": 1,
+        "last": 10,
+        "next": 2,
+        "previous": null,
+        "per": 2,
+        "from": 1,
+        "to": 2,
+        "count": 2,
+        "total": 20,
+        "isFirst": true,
+        "isLast": false,
+        "isNext": true,
+        "isPrevious": false
+      }
+    },
+    "links": {
+      "path": "https://laravel-v8.test/api/data",
+      "first": "https://laravel-v8.test/api/data?page=1",
+      "next": "https://laravel-v8.test/api/data?page=2",
+      "previous": null,
+      "last": "https://laravel-v8.test/api/data?page=10"
+    }
+  }
+}
+```
 
-- `apiPaginate($pagination, bool $reverse_data = false)`
-- `apiException($errors = null, bool $throw_exception = true, $errorCode = null)`
-- `apiNotFound($errors = null, bool $throw_exception = true, $errorCode = null)`
-- `apiBadRequest($errors = null, bool $throw_exception = true, $errorCode = null)`
-- `apiForbidden($message = null, $errors = null, $errorCode = null)`
-- `apiUnauthenticated($message = null, $errors = null, $errorCode = null)`
-- `apiValidate($data, $roles, array $messages = [], array $customAttributes = [])`
-- `apiDD($data)`
+### Available Methods
 
-## Error Codes Configuration
+```php
+$this->apiPaginate($pagination, bool $reverse_data = false)
+```
+Parameters:
+- First parameter: paginated model
+- Second parameter: whether to reverse the data or maintain original order
 
-The package provides flexible error code handling:
+Error Handling Methods:
+```php
+$this->apiException($errors = null, bool $throw_exception = true, $errorCode = null)
+$this->apiNotFound($errors = null, bool $throw_exception = true, $errorCode = null)
+$this->apiBadRequest($errors = null, bool $throw_exception = true, $errorCode = null)
+```
+
+Parameters:
+1. First parameter: errors (string or array)
+2. Second parameter: whether to throw exception (default: true)
+3. Third parameter: error code (integer, string, null, or UnitEnum instance)
+
+**IMPORTANT**: If error code is null, it will return the default error code if config `returnDefaultErrorCodes` is true
+
+### Forbidden Error Response
+
+```php
+return $this->apiForbidden('TEST MESSAGE', [
+    'error_1' => 'asdasasdasd',
+    'error_2' => 'asdasdasdasd'
+], 'FORBIDDEN');
+```
+
+Parameters:
+1. First parameter: message (string or null)
+2. Second parameter: errors (string, array, or null)
+3. Third parameter: error code (integer, string, null, or UnitEnum instance)
+
+Default message is "Forbidden"
+
+Note: If errors is null, the errors property won't appear in the response
+
+Response:
+```json
+{
+  "status": false,
+  "statusCode": 403,
+  "timestamp": 1723864903,
+  "message": "TEST MESSAGE",
+  "data": null,
+  "errorCode": "FORBIDDEN",
+  "errors": {
+    "error_1": "asdasasdasd",
+    "error_2": "asdasdasdasd"
+  }
+}
+```
+
+### Unauthenticated Error Response
+
+```php
+return $this->apiUnauthenticated('TEST MESSAGE', [
+    'error_1' => 'asdasasdasd',
+    'error_2' => 'asdasdasdasd'
+], 'UNAUTHORIZED_ACCESS');
+```
+
+Parameters:
+- First parameter: message (string or null)
+- Second parameter: errors (array, string, or null)
+- Default message: "Unauthenticated"
+
+Note: If errors is null, the errors property won't appear in the response
+
+Response:
+```json
+{
+  "status": false,
+  "statusCode": 403,
+  "timestamp": 1723864903,
+  "message": "TEST MESSAGE",
+  "data": null,
+  "errorCode": "UNAUTHORIZED_ACCESS",
+  "errors": {
+    "error_1": "asdasasdasd",
+    "error_2": "asdasdasdasd"
+  }
+}
+```
+
+### API Validation
+
+```php
+$this->apiValidate($data, $roles, array $messages = [], array $customAttributes = [])
+```
+
+Follows Laravel's validate() method pattern:
+- First parameter: data
+- Second parameter: roles
+- Third parameter: messages
+- Fourth parameter: custom attributes
+
+Returns validated data on success or throws an exception using this trait on failure.
+
+### Debug Helper
+
+```php
+return $this->apiDD([
+    [
+        'id' => 1,
+        'name' => 'Test Name',
+    ],
+    [
+        'id' => 2,
+        'name' => 'Test Name 2',
+    ],
+    [
+        'id' => 3,
+        'name' => 'Test Name 3',
+    ],
+]);
+```
+
+Response:
+```json
+{
+  "status": false,
+  "statusCode": 422,
+  "timestamp": 1662105345,
+  "message": "Die and dump",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test Name"
+    },
+    {
+      "id": 2,
+      "name": "Test Name 2"
+    },
+    {
+      "id": 3,
+      "name": "Test Name 3"
+    }
+  ]
+}
+```
+
+### Error Codes Configuration
+
+The package provides extensive error code configuration options:
+
 1. Enable/disable error codes
-2. Set custom error code enum class
-3. Configure output type (string/integer)
-4. Enable/disable default error codes
-5. Set default error codes for functions
+2. Set error code enum class or custom enum class
+3. Set error codes output type (string or integer)
+4. Enable/disable returning default error codes if set as null
+5. Set error codes defaults for error functions
 
 ### Publishing Error Codes Enum
 
+Basic usage:
 ```bash
 php artisan lapi-response:publish-error-codes
-# or with custom name
+```
+
+With custom class name:
+```bash
 php artisan lapi-response:publish-error-codes CustomErrorCodesEnum
 ```
+
+If no custom name is specified, it will generate with the default class name "ErrorCodesEnum"
 
 ## Contributors
 
 <table>
 <tr>
-    <td align="center">
-        <a href="https://github.com/Ahmed-Elrayes">
-            <img src="https://avatars.githubusercontent.com/u/30704271?v=4" width="48" style="border-radius:50%" alt="Ahmed Elrayes"/>
+    <td align="center" style="word-wrap: break-word; width: 72.0; height: 72.0">
+        <a href=https://github.com/Ahmed-Elrayes>
+            <img src=https://avatars.githubusercontent.com/u/30704271?v=4 width="48;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Ahmed Elrayes/>
             <br />
-            <sub><b>Ahmed Elrayes</b></sub>
+            <sub style="font-size:14px"><b>Ahmed Elrayes</b></sub>
         </a>
     </td>
-    <td align="center">
-        <a href="https://github.com/i3rror">
-            <img src="https://avatars.githubusercontent.com/u/26237098?v=4" width="48" style="border-radius:50%" alt="Mohamed Aboushady"/>
-            <br />
-            <sub><b>Mohamed Aboushady</b></sub>
-        </a>
-    </td>
-</tr>
-</table>
-
-## License
-
-This package is licensed under the MIT License. See the [License File](LICENSE.md) for more information.
+    <td align="
