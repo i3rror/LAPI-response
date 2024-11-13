@@ -272,7 +272,7 @@ trait APIResponseTrait
 
             // Set errors
             $errors = config('response.returnValidationErrorsKeys', true) ?
-                $validator->errors() :
+                $validator->errors()->toArray() :
                 $validator->errors()->all();
             if ((bool)config('response.returnDefaultErrorCodes', true)) {
                 $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiValidate', 'VALIDATION_FAILED'));
