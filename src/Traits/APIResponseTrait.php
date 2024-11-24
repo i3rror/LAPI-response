@@ -77,7 +77,7 @@ trait APIResponseTrait
 
         // Set a default value if error code not sent
         if (!$errorCode && (bool)config('response.returnDefaultErrorCodes', true)) {
-            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiNotFound', 'RESOURCE_NOT_FOUND'));
+            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiNotFound', 'BAD_REQUEST'));
         }
 
         return $this->apiResponse([

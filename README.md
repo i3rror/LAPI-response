@@ -15,7 +15,7 @@ composer require i3rror/LAPI-response
 ```
 
 ### Step 2: Register Service Provider
-Include the service provider in your `config/app.php`:
+Include the service provider in your `config/app.php` or in `bootstrap/providers.php` if you're using laravel 11:
 ```php
 MA\LaravelApiResponse\Providers\APIResponseProvider::class
 ```
@@ -23,7 +23,7 @@ MA\LaravelApiResponse\Providers\APIResponseProvider::class
 ### Step 3: Publish Configuration
 Run the following command to publish the package configuration:
 ```bash
-php artisan vendor:publish --provider="MA\LaravelApiResponse\Providers\APIResponseProvider" --tag="lapi-response"
+php artisan vendor:publish --provider="MA\LaravelApiResponse\Providers\APIResponseProvider" --tag="lapi-response-config"
 ```
 
 ## Basic Implementation
