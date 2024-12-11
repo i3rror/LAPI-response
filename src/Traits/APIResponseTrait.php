@@ -184,10 +184,11 @@ trait APIResponseTrait
     /**
      * Paginate data
      * @param AnonymousResourceCollection|LengthAwarePaginator $pagination
-     * @param bool $reverse_data
+     * @param array $appends Extra data to append to the response
+     * @param bool $reverse_data Reverse data
      * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, bool $reverse_data = false): Res|StreamedJsonResponse|Application|ResponseFactory
+    public function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, array $appends = [], bool $reverse_data = false): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         // Set pagination data
         $isFirst = $pagination->onFirstPage();
@@ -213,38 +214,38 @@ trait APIResponseTrait
         }
 
         // Set extra
-        $extra = [
-            'pagination' => [
-                'meta' => [
-                    'page' => [
-                        "current" => $current,
-                        "first" => 1,
-                        "last" => $last,
-                        "next" => $next,
-                        "previous" => $previous,
+        $extra = $appends + [
+                'pagination' => [
+                    'meta' => [
+                        'page' => [
+                            "current" => $current,
+                            "first" => 1,
+                            "last" => $last,
+                            "next" => $next,
+                            "previous" => $previous,
 
-                        "per" => $pagination->perPage(),
-                        "from" => $pagination->firstItem(),
-                        "to" => $pagination->lastItem(),
+                            "per" => $pagination->perPage(),
+                            "from" => $pagination->firstItem(),
+                            "to" => $pagination->lastItem(),
 
-                        "count" => $pagination->count(),
-                        "total" => $pagination->total(),
+                            "count" => $pagination->count(),
+                            "total" => $pagination->total(),
 
-                        "isFirst" => $isFirst,
-                        "isLast" => $isLast,
-                        "isNext" => $isNext,
-                        "isPrevious" => $isPrevious,
+                            "isFirst" => $isFirst,
+                            "isLast" => $isLast,
+                            "isNext" => $isNext,
+                            "isPrevious" => $isPrevious,
+                        ],
+                    ],
+                    "links" => [
+                        "path" => $pagination->path(),
+                        "first" => $pagination->url(1),
+                        "next" => ($isNext ? $pagination->url($next) : null),
+                        "previous" => ($isPrevious ? $pagination->url($previous) : null),
+                        "last" => $pagination->url($last),
                     ],
                 ],
-                "links" => [
-                    "path" => $pagination->path(),
-                    "first" => $pagination->url(1),
-                    "next" => ($isNext ? $pagination->url($next) : null),
-                    "previous" => ($isPrevious ? $pagination->url($previous) : null),
-                    "last" => $pagination->url($last),
-                ],
-            ],
-        ];
+            ];
 
         return $this->apiRawResponse($data, null, $extra);
     }
