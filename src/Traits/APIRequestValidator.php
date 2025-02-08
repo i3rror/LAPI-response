@@ -15,7 +15,7 @@ trait APIRequestValidator
      * Handle a failed validation attempt.
      *
      * @param \Illuminate\Validation\Validator $validator
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\StreamedJsonResponse
+     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\StreamedJsonResponse
      *
      * @throws \Illuminate\Validation\ValidationException
      */
