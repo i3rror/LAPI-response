@@ -19,10 +19,10 @@ trait APIResponseTrait
 {
     /**
      * The ok response
-     * @param $data
+     * @param $data mixed|null
      * @return Res|StreamedJsonResponse|Application|ResponseFactory
      */
-    public function apiOk($data): Res|StreamedJsonResponse|Application|ResponseFactory
+    public function apiOk(mixed $data = null): Res|StreamedJsonResponse|Application|ResponseFactory
     {
         return $this->apiResponse([
             'data' => $data,
