@@ -503,6 +503,14 @@ Follows Laravel's validate() method pattern:
 
 Returns validated data on success or throws an exception using this trait on failure.
 
+### API Validation (Request)
+
+```php
+use APIRequestValidator;
+```
+
+Add this trait to your requests to handle validation errors.
+
 ### Debug Helper
 
 ```php
