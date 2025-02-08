@@ -67,7 +67,11 @@ class TestController extends Controller
                     'id' => 3,
                     'name' => 'Test Name 3',
                 ],
-            ]
+            ],
+            'extra' => [
+                'field1' => 'Field 1',
+                'field2' => 'Field 2'
+            ],
         ]);
     }
 }
@@ -502,6 +506,14 @@ Follows Laravel's validate() method pattern:
 - Fourth parameter: custom attributes
 
 Returns validated data on success or throws an exception using this trait on failure.
+
+### API Validation (Request)
+
+```php
+use APIRequestValidator;
+```
+
+Add this trait to your requests to handle validation errors.
 
 ### Debug Helper
 
