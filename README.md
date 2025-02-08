@@ -67,7 +67,11 @@ class TestController extends Controller
                     'id' => 3,
                     'name' => 'Test Name 3',
                 ],
-            ]
+            ],
+            'extra' => [
+                'field1' => 'Field 1',
+                'field2' => 'Field 2'
+            ],
         ]);
     }
 }
