@@ -65,6 +65,41 @@ if (!function_exists('config')) {
     }
 }
 
+if (!function_exists('redirect')) {
+    /**
+     * Get an instance of the redirector.
+     *
+     * @param string|null $to
+     * @param int $status
+     * @param array $headers
+     * @param bool|null $secure
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    function redirect($to = null, $status = 302, $headers = [], $secure = null)
+    {
+        if (is_null($to)) {
+            return app('redirect');
+        }
+
+        return app('redirect')->to($to, $status, $headers, $secure);
+    }
+}
+
+if (!function_exists('route')) {
+    /**
+     * Generate the URL to a named route.
+     *
+     * @param string $name
+     * @param mixed $parameters
+     * @param bool $absolute
+     * @return string
+     */
+    function route($name, $parameters = [], $absolute = true)
+    {
+        return app('url')->route($name, $parameters, $absolute);
+    }
+}
+
 if (!function_exists('config_path')) {
     /**
      * Get the configuration path.

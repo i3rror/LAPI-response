@@ -42,9 +42,9 @@ enum ErrorCodesEnum: int
     public static function getProperty(string|int $code): ErrorCodesEnum
     {
         if (is_numeric($code)) {
-            $property = static::class . "::" . static::tryFrom($code)->name;
+            $property = self::tryFrom($code)->name;
         } else {
-            $property = static::class . "::" . strtoupper($code);
+            $property = ErrorCodesEnum::class . "::" . strtoupper($code);
         }
 
         if (defined($property))

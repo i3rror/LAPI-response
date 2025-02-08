@@ -2,9 +2,11 @@
 
 namespace MA\LaravelApiResponse\Exceptions;
 
+use Error;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\RedirectResponse;
@@ -12,7 +14,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use MA\LaravelApiResponse\Traits\APIResponseTrait;
+use ParseError;
 use Psr\Log\LogLevel;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -93,7 +97,7 @@ class LumenHandler extends ExceptionHandler
         }
 
         // Server error
-        if (($e instanceof \Error || $e instanceof \ParseError) && $request->wantsJson()) {
+        if (($e instanceof Error || $e instanceof ParseError) && $request->wantsJson()) {
             // Check if app debug is enabled to return traces
             if (config('app.debug')) {
                 // Set data
@@ -125,9 +129,9 @@ class LumenHandler extends ExceptionHandler
      *
      * @param Request $request
      * @param AuthenticationException $exception
-     * @return RedirectResponse|Response
+     * @return JsonResponse|RedirectResponse|StreamedJsonResponse
      */
-    protected function unauthenticated($request, AuthenticationException $exception)
+    protected function unauthenticated(Request $request, AuthenticationException $exception)
     {
         return $request->expectsJson()
             ? $this->apiResponse(['type' => 'unauthenticated'])
