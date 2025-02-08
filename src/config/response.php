@@ -112,6 +112,9 @@ return [
     // Return default error codes if error code is set to null
     'returnDefaultErrorCodes' => true,
 
+    // Hide next, previous links in meta
+    'hideMetaPaginationLinks' => true,
+
     // Set error codes output default value for built-in functions
     'errorCodesDefaults' => [
         'apiNotFound' => 'RESOURCE_NOT_FOUND',
