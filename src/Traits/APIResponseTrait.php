@@ -247,6 +247,11 @@ trait APIResponseTrait
                 ],
             ];
 
+        // Remove pagination links
+        if (config('response.hideMetaPaginationLinks', true) && isset($extra['pagination'])) {
+            unset($extra['pagination']['links']);
+        }
+
         return $this->apiRawResponse($data, null, $extra);
     }
 
