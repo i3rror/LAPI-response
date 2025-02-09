@@ -7,12 +7,11 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\ValidationException;
-use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
+use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use MA\LaravelApiResponse\Traits\APIResponseTrait;
 use ParseError;
 use Psr\Log\LogLevel;
@@ -75,33 +74,17 @@ class LumenHandler extends ExceptionHandler
      *
      * @param Request $request
      * @param Throwable $e
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
+     * @return JsonResponse|StreamedJsonResponse|\Symfony\Component\HttpFoundation\Response
      * @throws Throwable
      */
-    public function render($request, Throwable $e): \Symfony\Component\HttpFoundation\Response
+    public function render($request, Throwable $e)
     {
-        // Not found http exception
-        if ($e instanceof NotFoundHttpException && $request->wantsJson()) {
-            return $this->apiResponse(['type' => 'not found']);
-        }
-
-        // Method not allowed http exception
-        if ($e instanceof MethodNotAllowedHttpException && $request->wantsJson()) {
-            return $this->apiResponse(['type' => 'not found']);
-        }
-
-        // Status code 0
-        if ($e instanceof HttpException && $request->wantsJson()) {
-            return $this->apiBadRequest();
-        }
-
-        // Server error
-        if (($e instanceof Error || $e instanceof ParseError) && $request->wantsJson()) {
+        // Check if request expects json
+        if ($request->expectsJson()) {
             // Check if app debug is enabled to return traces
-            if (config('app.debug')) {
+            if ((bool)config('app.debug')) {
                 // Set data
-                $data = new Collection([
+                $data = collect([
                     'exception' => get_class($e),
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
@@ -109,16 +92,29 @@ class LumenHandler extends ExceptionHandler
                 ]);
 
                 return $this->apiResponse([
-                    'type' => 'server error',
+                    'status_code' => 500,
                     'message' => $e->getMessage(),
                     'data' => $data,
                 ]);
             }
 
-            // Return server error response
-            return $this->apiResponse([
-                'type' => 'server error'
-            ]);
+            // Not found http exception OR Method not allowed http exception
+            if ($e instanceof NotFoundHttpException || $e instanceof MethodNotAllowedHttpException || $e instanceof ModelNotFoundException) {
+                return $this->apiNotFound();
+            }
+
+            // Status code 0
+            if ($e instanceof HttpException) {
+                return $this->apiBadRequest();
+            }
+
+            // Server error
+            if (($e instanceof Error || $e instanceof ParseError)) {
+                // Return server error response
+                return $this->apiResponse([
+                    'type' => 'server error'
+                ]);
+            }
         }
 
         return parent::render($request, $e);
