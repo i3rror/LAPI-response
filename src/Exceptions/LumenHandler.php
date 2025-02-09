@@ -92,14 +92,14 @@ class LumenHandler extends ExceptionHandler
                 ]);
 
                 return $this->apiResponse([
-                    'status_code' => $e->getCode(),
+                    'status_code' => 500,
                     'message' => $e->getMessage(),
                     'data' => $data,
                 ]);
             }
 
             // Not found http exception OR Method not allowed http exception
-            if ($e instanceof NotFoundHttpException || $e instanceof MethodNotAllowedHttpException) {
+            if ($e instanceof NotFoundHttpException || $e instanceof MethodNotAllowedHttpException || $e instanceof ModelNotFoundException) {
                 return $this->apiNotFound();
             }
 
