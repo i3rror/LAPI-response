@@ -11,7 +11,7 @@ This package provides comprehensive functionality for handling and returning all
 
 ### Step 1: Install via Composer
 ```bash
-composer require i3rror/LAPI-response
+$ composer require i3rror/LAPI-response
 ```
 
 ### Step 2: Register Service Provider
@@ -23,7 +23,7 @@ MA\LaravelApiResponse\Providers\APIResponseProvider::class
 ### Step 3: Publish Configuration
 Run the following command to publish the package configuration:
 ```bash
-php artisan vendor:publish --provider="MA\LaravelApiResponse\Providers\APIResponseProvider" --tag="lapi-response-config"
+$ php artisan vendor:publish --provider="MA\LaravelApiResponse\Providers\APIResponseProvider" --tag="lapi-response-config"
 ```
 
 ## Basic Implementation
@@ -574,36 +574,19 @@ The package provides extensive error code configuration options:
 
 Basic usage:
 ```bash
-php artisan lapi-response:publish-error-codes
+$ php artisan lapi-response:publish-error-codes
 ```
 
 With custom class name:
 ```bash
-php artisan lapi-response:publish-error-codes CustomErrorCodesEnum
+$ php artisan lapi-response:publish-error-codes CustomErrorCodesEnum
 ```
 
 If no custom name is specified, it will generate with the default class name "ErrorCodesEnum"
 
 ## Contributors
 
-<table>
-<tr>
-    <td align="center" style="word-wrap: break-word; width: 72.0; height: 72.0">
-        <a href=https://github.com/Ahmed-Elrayes>
-            <img src=https://avatars.githubusercontent.com/u/30704271?v=4 width="48;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Ahmed Elrayes/>
-            <br />
-            <sub style="font-size:14px"><b>Ahmed Elrayes</b></sub>
-        </a>
-    </td>
-    <td align="center" style="word-wrap: break-word; width: 72.0; height: 72.0">
-        <a href=https://github.com/i3rror>
-            <img src=https://avatars.githubusercontent.com/u/26237098?v=4 width="48;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Mohamed Aboushady/>
-            <br />
-            <sub style="font-size:14px"><b>Mohamed Aboushady</b></sub>
-        </a>
-    </td>
-</tr>
-</table>
+[![Contributors](https://contrib.rocks/image?repo=i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/graphs/contributors)
 
 ## License
 
