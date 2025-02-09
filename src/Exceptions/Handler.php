@@ -77,7 +77,7 @@ class Handler extends ExceptionHandler
         // Check if request expects json
         if($request->expectsJson()){
             // Check if app debug is enabled to return traces
-            if (config('app.debug')) {
+            if ((bool)config('app.debug')) {
                 // Set data
                 $data = collect([
                     'exception' => get_class($e),
