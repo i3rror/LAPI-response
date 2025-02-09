@@ -97,7 +97,9 @@ Expected response:
       "id": 3,
       "name": "Test Name 3"
     }
-  ]
+  ],
+  "field1": "Field 1",
+  "field2": "Field 2"
 }
 ```
 
