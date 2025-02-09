@@ -74,14 +74,30 @@ class LumenHandler extends ExceptionHandler
      *
      * @param Request $request
      * @param Throwable $e
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
+     * @return JsonResponse|StreamedJsonResponse|\Symfony\Component\HttpFoundation\Response
      * @throws Throwable
      */
-    public function render($request, Throwable $e): \Symfony\Component\HttpFoundation\Response
+    public function render($request, Throwable $e)
     {
         // Check if request expects json
         if ($request->expectsJson()) {
+            // Check if app debug is enabled to return traces
+            if (config('app.debug')) {
+                // Set data
+                $data = collect([
+                    'exception' => get_class($e),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTrace(),
+                ]);
+
+                return $this->apiResponse([
+                    'status_code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                    'data' => $data,
+                ]);
+            }
+
             // Not found http exception OR Method not allowed http exception
             if ($e instanceof NotFoundHttpException || $e instanceof MethodNotAllowedHttpException) {
                 return $this->apiNotFound();
@@ -94,23 +110,6 @@ class LumenHandler extends ExceptionHandler
 
             // Server error
             if (($e instanceof Error || $e instanceof ParseError)) {
-                // Check if app debug is enabled to return traces
-                if (config('app.debug')) {
-                    // Set data
-                    $data = new Collection([
-                        'exception' => get_class($e),
-                        'file' => $e->getFile(),
-                        'line' => $e->getLine(),
-                        'trace' => $e->getTrace(),
-                    ]);
-
-                    return $this->apiResponse([
-                        'type' => 'server error',
-                        'message' => $e->getMessage(),
-                        'data' => $data,
-                    ]);
-                }
-
                 // Return server error response
                 return $this->apiResponse([
                     'type' => 'server error'
