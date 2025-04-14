@@ -503,7 +503,7 @@ $this->apiValidate($data, $roles, array $messages = [], array $customAttributes 
 
 Follows Laravel's validate() method pattern:
 - First parameter: data
-- Second parameter: roles
+- Second parameter: rules
 - Third parameter: messages
 - Fourth parameter: custom attributes
 
