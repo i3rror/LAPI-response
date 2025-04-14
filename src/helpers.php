@@ -160,7 +160,7 @@ if (!function_exists('apiOk')) {
      */
     function apiOk(mixed $data = null)
     {
-        return APIResponse::apiOk($data);
+        return ApiResponse::apiOk($data);
     }
 }
 
@@ -175,7 +175,7 @@ if (!function_exists('apiNotFound')) {
      */
     function apiNotFound(array|string|null $errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null)
     {
-        return APIResponse::apiNotFound($errors, $throw_exception, $errorCode);
+        return ApiResponse::apiNotFound($errors, $throw_exception, $errorCode);
     }
 }
 
@@ -190,7 +190,7 @@ if (!function_exists('apiBadRequest')) {
      */
     function apiBadRequest(array|string|null $errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null)
     {
-        return APIResponse::apiBadRequest($errors, $throw_exception, $errorCode);
+        return ApiResponse::apiBadRequest($errors, $throw_exception, $errorCode);
     }
 }
 
@@ -205,7 +205,7 @@ if (!function_exists('apiException')) {
      */
     function apiException(array|string|null $errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null)
     {
-        return APIResponse::apiException($errors, $throw_exception, $errorCode);
+        return ApiResponse::apiException($errors, $throw_exception, $errorCode);
     }
 }
 
@@ -220,7 +220,7 @@ if (!function_exists('apiUnauthenticated')) {
      */
     function apiUnauthenticated(array|string|null $message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null)
     {
-        return APIResponse::apiUnauthenticated($message, $errors, $errorCode);
+        return ApiResponse::apiUnauthenticated($message, $errors, $errorCode);
     }
 }
 
@@ -235,7 +235,7 @@ if (!function_exists('apiUnauthenticated')) {
      */
     function apiUnauthenticated(array|string|null $message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null)
     {
-        return APIResponse::apiForbidden($message, $errors, $errorCode);
+        return ApiResponse::apiForbidden($message, $errors, $errorCode);
     }
 }
 
@@ -250,7 +250,7 @@ if (!function_exists('apiForbidden')) {
      */
     function apiForbidden(array|string|null $message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null)
     {
-        return APIResponse::apiForbidden($message, $errors, $errorCode);
+        return ApiResponse::apiForbidden($message, $errors, $errorCode);
     }
 }
 
@@ -265,7 +265,7 @@ if (!function_exists('apiPaginate')) {
      */
     function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, array $appends = [], bool $reverse_data = false)
     {
-        return APIResponse::apiPaginate($pagination, $appends, $reverse_data);
+        return ApiResponse::apiPaginate($pagination, $appends, $reverse_data);
     }
 }
 
@@ -281,7 +281,7 @@ if (!function_exists('apiValidate')) {
      */
     function apiValidate(array|Request $data, array $rules, array $messages = [], array $attributes = [])
     {
-        return APIResponse::apiValidate($data, $rules, $messages, $attributes);
+        return ApiResponse::apiValidate($data, $rules, $messages, $attributes);
     }
 }
 
@@ -294,7 +294,7 @@ if (!function_exists('apiDD')) {
      */
     function apiDD(mixed $data)
     {
-        return APIResponse::apiDD($data);
+        return ApiResponse::apiDD($data);
     }
 }
 
@@ -309,7 +309,7 @@ if (!function_exists('apiStreamResponse')) {
      */
     function apiStreamResponse(Generator $generator, ?string $message = null, int $statusCode = Response::HTTP_OK)
     {
-        return APIResponse::apiStreamResponse($generator, $message, $statusCode);
+        return ApiResponse::apiStreamResponse($generator, $message, $statusCode);
     }
 }
 
@@ -324,6 +324,6 @@ if (!function_exists('apiResponse')) {
      */
     function apiResponse(array|string|null $arg = null, mixed $data = null, array $guards = [])
     {
-        return APIResponse::apiResponse($arg, $data, $guards);
+        return ApiResponse::apiResponse($arg, $data, $guards);
     }
 }
