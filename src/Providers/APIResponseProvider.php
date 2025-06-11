@@ -4,6 +4,7 @@ namespace MA\LaravelApiResponse\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use MA\LaravelApiResponse\Console\PublishErrorCodesEnumCommand;
+use MA\LaravelApiResponse\Services\APIResponseService;
 
 class APIResponseProvider extends ServiceProvider
 {
@@ -14,7 +15,9 @@ class APIResponseProvider extends ServiceProvider
      */
     public function register()
     {
-
+        $this->app->singleton('lapi-response', function () {
+            return new APIResponseService();
+        });
     }
 
     /**
@@ -25,9 +28,7 @@ class APIResponseProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__ . '/../config/response.php' => config_path('response.php'),
-            ], 'lapi-response-config');
+            $this->mergeConfigFrom(__DIR__ . '/../config/response.php', 'lapi-response-config');
             $this->commands([
                 PublishErrorCodesEnumCommand::class,
             ]);
