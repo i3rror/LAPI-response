@@ -31,7 +31,7 @@ class APIResponseProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/response.php.php' => config_path('response.php'),
+                __DIR__ . '/../config/response.php' => config_path('response.php'),
             ], 'lapi-response-config');
 
             $this->commands([
