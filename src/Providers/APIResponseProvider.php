@@ -15,7 +15,9 @@ class APIResponseProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('lapi-response', function () {
+        $this->mergeConfigFrom(__DIR__ . '/../config/response.php', 'response');
+
+        $this->app->bind('lapi-response', function () {
             return new APIResponseService();
         });
     }
@@ -28,11 +30,15 @@ class APIResponseProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->runningInConsole()) {
-            $this->mergeConfigFrom(__DIR__ . '/../config/response.php', 'lapi-response-config');
+            $this->publishes([
+                __DIR__ . '/../config/response.php.php' => config_path('response.php'),
+            ], 'lapi-response-config');
+
             $this->commands([
                 PublishErrorCodesEnumCommand::class,
             ]);
         }
+
         if (class_exists('\Illuminate\Foundation\Exceptions\Handler')) {
             $this->app->singleton(
                 \Illuminate\Contracts\Debug\ExceptionHandler::class,

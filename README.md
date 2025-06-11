@@ -69,8 +69,8 @@ Alternatively, you can use the package's global helper functions without adding 
 
 ```php
 // In any file in your application
-return apiOk($data);
-return apiNotFound("Resource not found");
+return apiOk($data, $message);
+return apiNotFound(["Resource not found"], "Resource not found");
 return apiResponse(['message' => 'Success', 'data' => $data]);
 ```
 
@@ -106,16 +106,10 @@ Response:
 }
 ```
 
-### Simplified Usage
-
-You can use short parameter values in two ways:
-- String parameters are set as messages
-- Array parameters are set as data
-
 #### Message Example:
 
 ```php
-return $this->apiOk("Operation completed successfully");
+return $this->apiOk("Operation completed successfully", "Message");
 ```
 
 Response:
@@ -124,7 +118,7 @@ Response:
   "status": true,
   "statusCode": 200,
   "timestamp": 1662104853,
-  "message": "OK",
+  "message": "Message",
   "data": "Operation completed successfully"
 }
 ```
@@ -132,7 +126,7 @@ Response:
 #### Data Example:
 
 ```php
-return $this->apiOk($yourDataArray);
+return $this->apiOk($yourDataArray, "Message");
 ```
 
 Response:
@@ -141,7 +135,7 @@ Response:
   "status": true,
   "statusCode": 200,
   "timestamp": 1662105038,
-  "message": "OK",
+  "message": "Message",
   "data": [
     {
       "id": 1,
@@ -171,7 +165,7 @@ protected function yieldData(): Generator
 #### Not Found Example
 
 ```php
-return $this->apiNotFound("Resource not found");
+return $this->apiNotFound("Resource not found", "Error Not Found Message");
 ```
 
 Response:
@@ -238,6 +232,50 @@ The response includes pagination metadata with page information and navigation l
 ## Available Methods
 
 All methods listed below are available both as trait methods and as global helper functions. You can use them either way depending on your implementation preference.
+
+### Create Response
+#### Simplified Usage for apiResponse function
+
+You can use short parameter values in two ways:
+- String parameters are set as messages
+- Array parameters are set as data
+```php
+// As trait methods
+$this->apiResponse($data = null)
+
+// As helper functions
+apiResponse($data = null)
+````
+#### Example
+```php
+return $this->apiResponse([
+        'status_code' => Response::HTTP_OK,
+        'message' => 'This is custom message',
+        'data' => [
+            'data1' => 'custom data 1',
+            'data2' => 'custom data 2'
+        ],
+        'extra' => [
+            'extra1' => 'extra data 1',
+            'extra2' => 'extra data 2'
+        ]
+    ]);
+```
+### Response
+```json
+{
+  "status": true,
+  "statusCode": 200,
+  "timestamp": 1749643578,
+  "message": "This is custom message",
+  "data": {
+    "data1": "custom data 1",
+    "data2": "custom data 2"
+  },
+  "extra1": "extra data 1",
+  "extra2": "extra data 2"
+}
+```
 
 ### Success Responses
 

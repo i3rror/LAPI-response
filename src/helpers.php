@@ -158,9 +158,9 @@ if (!function_exists('apiOk')) {
      * @param mixed|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    function apiOk(mixed $data = null)
+    function apiOk(mixed $data = null, ?string $message = null)
     {
-        return ApiResponse::apiOk($data);
+        return ApiResponse::apiOk($data, $message);
     }
 }
 
@@ -168,14 +168,20 @@ if (!function_exists('apiNotFound')) {
     /**
      * Handle an API not found response.
      *
-     * @param array|string|null $errors Errors or messages describing the issue.
-     * @param bool $throw_exception Indicates if an exception should be thrown.
-     * @param string|int|UnitEnum|null $errorCode Custom error code associated with the response.
+     * @param array|string $errors The error details or messages.
+     * @param string|null $message An optional custom error message.
+     * @param bool $throw_exception Whether to throw an exception or not.
+     * @param string|int|\UnitEnum|null $errorCode An optional error code.
      * @return \Illuminate\Http\JsonResponse
      */
-    function apiNotFound(array|string|null $errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null)
+    function apiNotFound(
+        array|string             $errors = [],
+        ?string                  $message = null,
+        bool                     $throw_exception = true,
+        string|int|UnitEnum|null $errorCode = null
+    )
     {
-        return ApiResponse::apiNotFound($errors, $throw_exception, $errorCode);
+        return ApiResponse::apiNotFound($errors, $message, $throw_exception, $errorCode);
     }
 }
 
@@ -183,14 +189,20 @@ if (!function_exists('apiBadRequest')) {
     /**
      * Handle an API bad request response.
      *
-     * @param array|string|null $errors The errors associated with the bad request.
+     * @param array|string $errors The errors associated with the bad request.
+     * @param string|null $message An optional custom error message.
      * @param bool $throw_exception Whether to throw an exception for the bad request.
-     * @param string|int|\UnitEnum|null $errorCode A specific error code to associate with the bad request.
+     * @param string|int|UnitEnum|null $errorCode A specific error code to associate with the bad request.
      * @return \Illuminate\Http\JsonResponse
      */
-    function apiBadRequest(array|string|null $errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null)
+    function apiBadRequest(
+        array|string             $errors = [],
+        ?string                  $message = null,
+        bool                     $throw_exception = true,
+        string|int|UnitEnum|null $errorCode = null
+    )
     {
-        return ApiResponse::apiBadRequest($errors, $throw_exception, $errorCode);
+        return ApiResponse::apiBadRequest($errors, $message, $throw_exception, $errorCode);
     }
 }
 
@@ -198,14 +210,20 @@ if (!function_exists('apiException')) {
     /**
      * Handle and generate an API exception response.
      *
-     * @param array|string|null $errors List of errors or error message.
+     * @param array|string $errors List of errors or error message.
+     * @param string|null $message An optional custom error message.
      * @param bool $throw_exception Indicates whether to throw the exception.
      * @param string|int|UnitEnum|null $errorCode Specific error code for the exception.
      * @return \Illuminate\Http\JsonResponse
      */
-    function apiException(array|string|null $errors = null, bool $throw_exception = true, string|int|UnitEnum|null $errorCode = null)
+    function apiException(
+        array|string             $errors = [],
+        ?string                  $message = null,
+        bool                     $throw_exception = true,
+        string|int|UnitEnum|null $errorCode = null
+    )
     {
-        return ApiResponse::apiException($errors, $throw_exception, $errorCode);
+        return ApiResponse::apiException($errors, $message, $throw_exception, $errorCode);
     }
 }
 
@@ -213,42 +231,35 @@ if (!function_exists('apiUnauthenticated')) {
     /**
      * Create an unauthenticated API response.
      *
-     * @param array|string|null $message The error message or messages to include in the response.
-     * @param array|string|null $errors The specific error details to include in the response.
+     * @param string|null $message The error message or messages to include in the response.
+     * @param array|string $errors The specific error details to include in the response.
      * @param string|int|UnitEnum|null $errorCode The error code to associate with the response.
      * @return \Illuminate\Http\JsonResponse
      */
-    function apiUnauthenticated(array|string|null $message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null)
+    function apiUnauthenticated(
+        ?string                  $message = null,
+        array|string             $errors = [],
+        string|int|UnitEnum|null $errorCode = null
+    )
     {
         return ApiResponse::apiUnauthenticated($message, $errors, $errorCode);
     }
 }
 
-if (!function_exists('apiUnauthenticated')) {
-    /**
-     * Handle an unauthenticated API response with a forbidden status.
-     *
-     * @param array|string|null $message The error message or messages to include in the response.
-     * @param array|string|null $errors Specific error details to include in the response.
-     * @param string|int|\UnitEnum|null $errorCode The error code associated with the response.
-     * @return \Illuminate\Http\JsonResponse
-     */
-    function apiUnauthenticated(array|string|null $message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null)
-    {
-        return ApiResponse::apiForbidden($message, $errors, $errorCode);
-    }
-}
-
 if (!function_exists('apiForbidden')) {
     /**
-     * Generate a response indicating that the requested API action is forbidden.
+     * Generates an API response indicating a forbidden action.
      *
-     * @param array|string|null $message Optional message providing additional context about the forbidden action.
-     * @param array|string|null $errors Optional detailed error information.
-     * @param string|int|\UnitEnum|null $errorCode Optional error code associated with the forbidden response.
+     * @param string|null $message The custom error message, if any.
+     * @param array|string $errors A list of errors or a single error message.
+     * @param string|int|\UnitEnum|null $errorCode The specific error code, if applicable.
      * @return \Illuminate\Http\JsonResponse
      */
-    function apiForbidden(array|string|null $message = null, array|string $errors = null, string|int|UnitEnum|null $errorCode = null)
+    function apiForbidden(
+        ?string                  $message = null,
+        array|string             $errors = [],
+        string|int|UnitEnum|null $errorCode = null
+    )
     {
         return ApiResponse::apiForbidden($message, $errors, $errorCode);
     }
@@ -273,15 +284,15 @@ if (!function_exists('apiValidate')) {
     /**
      * Validate input data using the provided rules and messages, with optional attribute names.
      *
-     * @param array|\Illuminate\Http\Request $data The input data to be validated.
+     * @param array|\Illuminate\Http\Request $request The input data to be validated.
      * @param array $rules The validation rules to apply to the data.
      * @param array $messages Optional custom error messages.
      * @param array $attributes Optional custom attribute names.
      * @return \Illuminate\Http\JsonResponse
      */
-    function apiValidate(array|Request $data, array $rules, array $messages = [], array $attributes = [])
+    function apiValidate(array|Request $request, array $rules, array $messages = [], array $attributes = [])
     {
-        return ApiResponse::apiValidate($data, $rules, $messages, $attributes);
+        return ApiResponse::apiValidate($request, $rules, $messages, $attributes);
     }
 }
 
