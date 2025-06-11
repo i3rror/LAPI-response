@@ -19,6 +19,35 @@ LAPI-response is a comprehensive Laravel package that standardizes API responses
 - **Stream Response**: Support for streaming large datasets
 - **Configurable**: Extensive configuration options to customize behavior
 
+## Requirements
+
+- PHP 8.1 or higher (required for PHP enums)
+- Laravel 10.43.0 or higher
+
+## Dependencies
+
+This package has been optimized to use the minimal set of Laravel components:
+
+### Core Dependencies
+- illuminate/config
+- illuminate/contracts
+- illuminate/http
+- illuminate/pagination
+- illuminate/support
+- illuminate/validation
+- symfony/http-foundation
+- psr/log
+
+### Optional Dependencies
+The following packages are suggested for specific features:
+- illuminate/auth - Required for authentication exception handling
+- illuminate/container - Required for standalone usage outside of Laravel
+- illuminate/routing - Required for redirect functionality
+- symfony/http-kernel - Required for HTTP exception handling
+- symfony/console - Required for console commands
+
+When used within a Laravel application, these optional dependencies will be available through Laravel itself.
+
 ## Installation
 
 ### Step 1: Install via Composer
@@ -378,6 +407,26 @@ php artisan lapi-response:publish-error-codes CustomErrorCodesEnum
 ## Contributors
 
 [![Contributors](https://contrib.rocks/image?repo=i3rror/LAPI-response)](https://github.com/i3rror/LAPI-response/graphs/contributors)
+
+## Testing
+
+This package includes a comprehensive test suite. To run the tests:
+
+```bash
+composer install
+vendor/bin/phpunit
+```
+
+### Test Coverage
+
+The test suite covers:
+
+- Basic API responses (success, error, etc.)
+- Pagination functionality
+- Validation handling
+- Error code handling
+- Exception handling
+- Helper functions
 
 ## License
 

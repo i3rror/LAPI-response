@@ -42,13 +42,17 @@ enum ErrorCodesEnum: int
     public static function getProperty(string|int $code): ErrorCodesEnum
     {
         if (is_numeric($code)) {
-            $property = self::tryFrom($code)->name;
+            $enum = self::tryFrom((int)$code);
+            if ($enum === null) {
+                throw new Exception("Enum with value '$code' not found!");
+            }
+            return $enum;
         } else {
             $property = ErrorCodesEnum::class . "::" . strtoupper($code);
-        }
 
-        if (defined($property))
-            return constant($property);
-        throw new Exception("Enum '$property' not found!");
+            if (defined($property))
+                return constant($property);
+            throw new Exception("Enum '$property' not found!");
+        }
     }
 }

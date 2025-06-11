@@ -356,7 +356,7 @@ trait APIResponseTrait
                 $errorCode = null;
             }
 
-            return $this->apiBadRequest($errors, true, $errorCode);
+            return $this->apiBadRequest($errors, null, true, $errorCode);
         }
 
         return $validator->validated();

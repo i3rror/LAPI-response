@@ -24,17 +24,19 @@
   "license": "MIT",
   "require": {
     "php": ">=8.1",
-    "illuminate/auth": ">=10.43.0",
     "illuminate/config": ">=10.43.0",
-    "illuminate/container": ">=10.43.0",
     "illuminate/contracts": ">=10.43.0",
     "illuminate/http": ">=10.43.0",
     "illuminate/pagination": ">=10.43.0",
-    "illuminate/routing": ">=10.43.0",
     "illuminate/support": ">=10.43.0",
     "illuminate/validation": ">=10.43.0",
     "symfony/http-foundation": "^6.0 || ^7.0",
     "psr/log": "^3.0"
+  },
+  "require-dev": {
+    "mockery/mockery": "^1.5",
+    "orchestra/testbench": "^8.0",
+    "phpunit/phpunit": "^10.0"
   },
   "autoload": {
     "psr-4": {
@@ -43,6 +45,18 @@
     "files": [
       "src/helpers.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "MA\\LaravelApiResponse\\Tests\\": "tests/"
+    }
+  },
+  "suggest": {
+    "illuminate/auth": "Required for authentication exception handling",
+    "illuminate/container": "Required for standalone usage outside of Laravel",
+    "illuminate/routing": "Required for redirect functionality",
+    "symfony/http-kernel": "Required for HTTP exception handling",
+    "symfony/console": "Required for console commands"
   },
   "config": {
     "sort-packages": true
