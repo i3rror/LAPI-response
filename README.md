@@ -249,6 +249,19 @@ $data = $this->apiValidate($request, [
 
 If validation fails, it returns a standardized error response with validation errors.
 
+#### Also we have a trait ready to use in case you're using FormRequests.
+```php
+use MA\LaravelApiResponse\Traits\APIRequestValidator;
+
+class UpdateAccountRequest extends FormRequest
+{
+    use APIRequestValidator;
+    
+    // If you want to set a custom message in the return response upon failing
+    // You can use this
+    protected ?string $errorMessage = 'Validation failed.',
+}
+```
 ### Pagination Support
 
 ```php
