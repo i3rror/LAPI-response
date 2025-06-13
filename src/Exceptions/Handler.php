@@ -100,9 +100,6 @@ class Handler extends ExceptionHandler
                 return $this->apiBadRequest();
             }
 
-            // Report error
-            $this->report($e);
-
             // Return server error
             return $this->apiResponse([
                 'type' => 'servererror'
