@@ -2,18 +2,15 @@
 
 namespace MA\LaravelApiResponse\Exceptions;
 
-use Error;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use MA\LaravelApiResponse\Traits\APIResponseTrait;
-use ParseError;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -108,13 +105,10 @@ class LumenHandler extends ExceptionHandler
                 return $this->apiBadRequest();
             }
 
-            // Server error
-            if (($e instanceof Error || $e instanceof ParseError)) {
-                // Return server error response
-                return $this->apiResponse([
-                    'type' => 'server error'
-                ]);
-            }
+            // Return server error
+            return $this->apiResponse([
+                'type' => 'servererror'
+            ]);
         }
 
         return parent::render($request, $e);

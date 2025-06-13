@@ -2,17 +2,13 @@
 
 namespace MA\LaravelApiResponse\Exceptions;
 
-use Error;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use MA\LaravelApiResponse\Traits\APIResponseTrait;
-use ParseError;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -76,7 +72,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         // Check if request expects json
-        if($request->expectsJson()){
+        if ($request->expectsJson()) {
             // Check if app debug is enabled to return traces
             if ((bool)config('app.debug')) {
                 // Set data
@@ -104,13 +100,10 @@ class Handler extends ExceptionHandler
                 return $this->apiBadRequest();
             }
 
-            // Server error
-            if (($e instanceof Error || $e instanceof ParseError)) {
-                // Return server error response
-                return $this->apiResponse([
-                    'type' => 'server error'
-                ]);
-            }
+            // Return server error
+            return $this->apiResponse([
+                'type' => 'servererror'
+            ]);
         }
 
         return parent::render($request, $e);
