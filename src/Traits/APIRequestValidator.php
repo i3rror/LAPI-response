@@ -11,8 +11,6 @@ trait APIRequestValidator
     use APIResponseTrait;
     use InteractsWithContentTypes;
 
-    protected ?string $errorMessage = null;
-
     /**
      * Handle a failed validation attempt.
      *
@@ -37,7 +35,7 @@ trait APIRequestValidator
                 $errorCode = null;
             }
 
-            return $this->apiBadRequest($errors, $this->errorMessage,true, $errorCode);
+            return $this->apiBadRequest($errors, $this->errorMessage ?? null,true, $errorCode);
         }
 
         throw new $exception($validator);
