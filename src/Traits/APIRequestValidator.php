@@ -52,7 +52,7 @@ trait APIRequestValidator
     {
         // if expects json
         if ($this->expectsJson()) {
-            $this->apiUnauthenticated();
+            $this->apiForbidden();
         }
 
         throw new UnauthorizedException;
