@@ -104,11 +104,6 @@ class LumenHandler extends ExceptionHandler
             if ($e instanceof HttpException) {
                 return $this->apiBadRequest();
             }
-
-            // Return server error
-            return $this->apiResponse([
-                'type' => 'servererror'
-            ]);
         }
 
         return parent::render($request, $e);

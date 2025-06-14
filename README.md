@@ -335,29 +335,29 @@ apiResponse($data = null)
 
 ```php
 // As trait methods
-$this->apiNotFound($errors = null, $throw_exception = true, $errorCode = null)
-$this->apiBadRequest($errors = null, $throw_exception = true, $errorCode = null)
-$this->apiException($errors = null, $throw_exception = true, $errorCode = null)
-$this->apiUnauthenticated($message = null, $errors = null, $errorCode = null)
-$this->apiForbidden($message = null, $errors = null, $errorCode = null)
+$this->apiNotFound($errors = null, $throw_exception = true, $errorCode = null, $headers = [])
+$this->apiBadRequest($errors = null, $throw_exception = true, $errorCode = null, $headers = [])
+$this->apiException($errors = null, $throw_exception = true, $errorCode = null, $headers = [])
+$this->apiUnauthenticated($message = null, $errors = null, $errorCode = null, $headers = [])
+$this->apiForbidden($message = null, $errors = null, $errorCode = null, $headers = [])
 
 // As helper functions
-apiNotFound($errors = null, $throw_exception = true, $errorCode = null)
-apiBadRequest($errors = null, $throw_exception = true, $errorCode = null)
-apiException($errors = null, $throw_exception = true, $errorCode = null)
-apiUnauthenticated($message = null, $errors = null, $errorCode = null)
-apiForbidden($message = null, $errors = null, $errorCode = null)
+apiNotFound($errors = null, $throw_exception = true, $errorCode = null, $headers = [])
+apiBadRequest($errors = null, $throw_exception = true, $errorCode = null, $headers = [])
+apiException($errors = null, $throw_exception = true, $errorCode = null, $headers = [])
+apiUnauthenticated($message = null, $errors = null, $errorCode = null, $headers = [])
+apiForbidden($message = null, $errors = null, $errorCode = null, $headers = [])
 ```
 
 ### Pagination and Validation
 
 ```php
 // As trait methods
-$this->apiPaginate($pagination, $appends = [], $reverse_data = false)
+$this->apiPaginate($pagination, $appends = [], $reverse_data = false, $headers = [])
 $this->apiValidate($data, $rules, $messages = [], $attributes = [])
 
 // As helper functions
-apiPaginate($pagination, $appends = [], $reverse_data = false)
+apiPaginate($pagination, $appends = [], $reverse_data = false, $headers = [])
 apiValidate($data, $rules, $messages = [], $attributes = [])
 ```
 
@@ -366,11 +366,11 @@ apiValidate($data, $rules, $messages = [], $attributes = [])
 ```php
 // As trait methods
 $this->apiDD($data) // Debug helper
-$this->apiStreamResponse($generator, $message = null, $statusCode = 200)
+$this->apiStreamResponse($generator, $message = null, $statusCode = 200, $headers = [])
 
 // As helper functions
 apiDD($data) // Debug helper
-apiStreamResponse($generator, $message = null, $statusCode = 200)
+apiStreamResponse($generator, $message = null, $statusCode = 200, $headers = [])
 ```
 
 ## Configuration
