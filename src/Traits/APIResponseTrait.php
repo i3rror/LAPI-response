@@ -20,13 +20,15 @@ trait APIResponseTrait
      * The ok response
      * @param $data mixed|null
      * @param string|null $message
+     * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
-    public function apiOk(mixed $data = null, ?string $message = null): JsonResponse|StreamedJsonResponse
+    public function apiOk(mixed $data = null, ?string $message = null, array $headers = []): JsonResponse|StreamedJsonResponse
     {
         return $this->apiResponse([
             'data' => $data,
             'message' => $message,
+            'response_headers' => $headers,
         ]);
     }
 
@@ -36,13 +38,15 @@ trait APIResponseTrait
      * @param string|null $message
      * @param bool $throw_exception
      * @param string|int|UnitEnum|null $errorCode
+     * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
     public function apiNotFound(
         array|string             $errors = [],
         ?string                  $message = null,
         bool                     $throw_exception = true,
-        string|int|UnitEnum|null $errorCode = null
+        string|int|UnitEnum|null $errorCode = null,
+        array                    $headers = []
     ): JsonResponse|StreamedJsonResponse
     {
         // Set errors
@@ -70,6 +74,7 @@ trait APIResponseTrait
             'data' => null,
             'errors' => $errorsCollection->toArray(),
             'errorCode' => $errorCode,
+            'response_headers' => $headers,
         ]);
     }
 
@@ -79,13 +84,15 @@ trait APIResponseTrait
      * @param string|null $message
      * @param bool $throw_exception
      * @param string|int|null|UnitEnum $errorCode
+     * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
     public function apiBadRequest(
         array|string             $errors = [],
         ?string                  $message = null,
         bool                     $throw_exception = true,
-        string|int|null|UnitEnum $errorCode = null
+        string|int|null|UnitEnum $errorCode = null,
+        array                    $headers = []
     ): JsonResponse|StreamedJsonResponse
     {
         // Set errors
@@ -113,6 +120,7 @@ trait APIResponseTrait
             'data' => null,
             'errors' => $errorsCollection->toArray(),
             'errorCode' => $errorCode,
+            'response_headers' => $headers,
         ]);
     }
 
@@ -122,13 +130,15 @@ trait APIResponseTrait
      * @param string|null $message
      * @param bool $throw_exception
      * @param string|int|UnitEnum|null $errorCode
+     * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
     public function apiException(
         array|string             $errors = [],
         ?string                  $message = null,
         bool                     $throw_exception = true,
-        string|int|UnitEnum|null $errorCode = null
+        string|int|UnitEnum|null $errorCode = null,
+        array                    $headers = []
     ): JsonResponse|StreamedJsonResponse
     {
         // Set errors
@@ -156,6 +166,7 @@ trait APIResponseTrait
             'message' => $message,
             'errors' => $errorsCollection->toArray(),
             'errorCode' => $errorCode,
+            'response_headers' => $headers,
         ]);
     }
 
@@ -164,12 +175,14 @@ trait APIResponseTrait
      * @param null|string $message
      * @param array|string $errors
      * @param string|int|UnitEnum|null $errorCode
+     * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
     public function apiUnauthenticated(
         ?string                  $message = null,
         array|string             $errors = [],
-        string|int|UnitEnum|null $errorCode = null
+        string|int|UnitEnum|null $errorCode = null,
+        array                    $headers = []
     ): JsonResponse|StreamedJsonResponse
     {
         // Set errors
@@ -197,6 +210,7 @@ trait APIResponseTrait
             'data' => null,
             'errors' => $errorsCollection->toArray(),
             'errorCode' => $errorCode,
+            'response_headers' => $headers,
         ]);
     }
 
@@ -205,12 +219,14 @@ trait APIResponseTrait
      * @param string|null $message
      * @param array|string $errors
      * @param string|int|UnitEnum|null $errorCode
+     * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
     public function apiForbidden(
         ?string                  $message = null,
         array|string             $errors = [],
-        string|int|UnitEnum|null $errorCode = null
+        string|int|UnitEnum|null $errorCode = null,
+        array                    $headers = []
     ): JsonResponse|StreamedJsonResponse
     {
         // Set errors
@@ -238,6 +254,7 @@ trait APIResponseTrait
             'data' => null,
             'errors' => $errorsCollection->toArray(),
             'errorCode' => $errorCode,
+            'response_headers' => $headers,
         ]);
     }
 
@@ -246,12 +263,14 @@ trait APIResponseTrait
      * @param AnonymousResourceCollection|LengthAwarePaginator $pagination
      * @param array $appends Extra data to append to the response
      * @param bool $reverse_data Reverse data
+     * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
     public function apiPaginate(
         LengthAwarePaginator|AnonymousResourceCollection $pagination,
         array                                            $appends = [],
-        bool                                             $reverse_data = false
+        bool                                             $reverse_data = false,
+        array                                            $headers = []
     ): JsonResponse|StreamedJsonResponse
     {
         // Set pagination data
@@ -316,7 +335,7 @@ trait APIResponseTrait
             unset($extra['pagination']['links']);
         }
 
-        return $this->apiRawResponse($data, null, $extra);
+        return $this->apiRawResponse(data: $data, extra: $extra, responseHeaders: $headers);
     }
 
     /**
@@ -381,12 +400,14 @@ trait APIResponseTrait
      * @param Generator $generator
      * @param string|null $message
      * @param int $statusCode
+     * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
     public function apiStreamResponse(
         Generator $generator,
         ?string   $message = null,
-        int       $statusCode = Response::HTTP_OK
+        int       $statusCode = Response::HTTP_OK,
+        array     $headers = []
     ): JsonResponse|StreamedJsonResponse
     {
         return $this->apiResponse([
@@ -394,6 +415,7 @@ trait APIResponseTrait
             'message' => $message,
             'data' => $generator,
             'isStream' => true,
+            'response_headers' => $headers,
         ]);
     }
 
@@ -413,6 +435,7 @@ trait APIResponseTrait
         $errorCode = $arg['errorCode'] ?? null;
         $isStream = $arg['isStream'] ?? false;
         $extra = $arg['extra'] ?? [];
+        $responseHeaders = $arg['response_headers'] ?? [];
         if (array_key_exists('data', $extra)) {
             $extra['renamedDataAttributeInArray'] = $extra['data'];
             unset($extra['data']);
@@ -456,11 +479,20 @@ trait APIResponseTrait
             $data = $data['data'];
         }
 
+        // Check if errors is sent
+        $errors = collect($arg['errors'] ?? [])
+            ->filter(fn($item) => !empty($item));
+
+        // Merge extra with errors
+        if ($errors->isEmpty()) {
+            $errors->merge($extra);
+        }
+
         // Check if errors
         if (isset($arg['errors'])) {
-            $response = $this->apiRawResponse($data, $message, $arg['errors'], $status_code, $errorCode, $isStream);
+            $response = $this->apiRawResponse($data, $message, $arg['errors'], $status_code, $errorCode, $isStream, $responseHeaders);
         } else {
-            $response = $this->apiRawResponse($data, $message, $extra, $status_code, $errorCode, $isStream);
+            $response = $this->apiRawResponse($data, $message, $extra, $status_code, $errorCode, $isStream, $responseHeaders);
         }
 
         // Throw exceptions
@@ -479,6 +511,7 @@ trait APIResponseTrait
      * @param int $status_code
      * @param null|UnitEnum|int|string $errorCode
      * @param bool $isStream
+     * @param array $responseHeaders
      * @return JsonResponse|StreamedJsonResponse
      */
     private function apiRawResponse(
@@ -487,7 +520,8 @@ trait APIResponseTrait
         array                    $extra = [],
         int                      $status_code = Response::HTTP_OK,
         null|UnitEnum|int|string $errorCode = null,
-        bool                     $isStream = false
+        bool                     $isStream = false,
+        array                    $responseHeaders = [],
     )
     {
         // Filter data[]
@@ -539,7 +573,8 @@ trait APIResponseTrait
             $response = $this->arrayMergeRecursiveDistinct($response, $extra);
         }
 
-        return $isStream ? response()->streamJson($response, $status_code) : response()->json($response, $status_code);
+        // Return data
+        return $isStream ? response()->streamJson($response, $status_code, $responseHeaders) : response()->json($response, $status_code, $responseHeaders);
     }
 
     /**

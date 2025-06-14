@@ -156,9 +156,11 @@ if (!function_exists('apiOk')) {
      * Handle a successful API response.
      *
      * @param mixed|null $data
+     * @param string|null $message
+     * @param array $headers
      * @return \Illuminate\Http\JsonResponse
      */
-    function apiOk(mixed $data = null, ?string $message = null)
+    function apiOk(mixed $data = null, ?string $message = null, array $headers = [])
     {
         return ApiResponse::apiOk($data, $message);
     }
@@ -172,16 +174,18 @@ if (!function_exists('apiNotFound')) {
      * @param string|null $message An optional custom error message.
      * @param bool $throw_exception Whether to throw an exception or not.
      * @param string|int|\UnitEnum|null $errorCode An optional error code.
+     * @param array $headers optional headers to be implemented in response.
      * @return \Illuminate\Http\JsonResponse
      */
     function apiNotFound(
         array|string             $errors = [],
         ?string                  $message = null,
         bool                     $throw_exception = true,
-        string|int|UnitEnum|null $errorCode = null
+        string|int|UnitEnum|null $errorCode = null,
+        array                    $headers = []
     )
     {
-        return ApiResponse::apiNotFound($errors, $message, $throw_exception, $errorCode);
+        return ApiResponse::apiNotFound($errors, $message, $throw_exception, $errorCode, $headers);
     }
 }
 
@@ -193,16 +197,18 @@ if (!function_exists('apiBadRequest')) {
      * @param string|null $message An optional custom error message.
      * @param bool $throw_exception Whether to throw an exception for the bad request.
      * @param string|int|UnitEnum|null $errorCode A specific error code to associate with the bad request.
+     * @param array $headers optional headers to be implemented in response.
      * @return \Illuminate\Http\JsonResponse
      */
     function apiBadRequest(
         array|string             $errors = [],
         ?string                  $message = null,
         bool                     $throw_exception = true,
-        string|int|UnitEnum|null $errorCode = null
+        string|int|UnitEnum|null $errorCode = null,
+        array                    $headers = []
     )
     {
-        return ApiResponse::apiBadRequest($errors, $message, $throw_exception, $errorCode);
+        return ApiResponse::apiBadRequest($errors, $message, $throw_exception, $errorCode, $headers);
     }
 }
 
@@ -214,16 +220,18 @@ if (!function_exists('apiException')) {
      * @param string|null $message An optional custom error message.
      * @param bool $throw_exception Indicates whether to throw the exception.
      * @param string|int|UnitEnum|null $errorCode Specific error code for the exception.
+     * @param array $headers optional headers to be implemented in response.
      * @return \Illuminate\Http\JsonResponse
      */
     function apiException(
         array|string             $errors = [],
         ?string                  $message = null,
         bool                     $throw_exception = true,
-        string|int|UnitEnum|null $errorCode = null
+        string|int|UnitEnum|null $errorCode = null,
+        array                    $headers = []
     )
     {
-        return ApiResponse::apiException($errors, $message, $throw_exception, $errorCode);
+        return ApiResponse::apiException($errors, $message, $throw_exception, $errorCode, $headers);
     }
 }
 
@@ -234,15 +242,17 @@ if (!function_exists('apiUnauthenticated')) {
      * @param string|null $message The error message or messages to include in the response.
      * @param array|string $errors The specific error details to include in the response.
      * @param string|int|UnitEnum|null $errorCode The error code to associate with the response.
+     * @param array $headers optional headers to be implemented in response.
      * @return \Illuminate\Http\JsonResponse
      */
     function apiUnauthenticated(
         ?string                  $message = null,
         array|string             $errors = [],
-        string|int|UnitEnum|null $errorCode = null
+        string|int|UnitEnum|null $errorCode = null,
+        array                    $headers = []
     )
     {
-        return ApiResponse::apiUnauthenticated($message, $errors, $errorCode);
+        return ApiResponse::apiUnauthenticated($message, $errors, $errorCode, $headers);
     }
 }
 
@@ -253,15 +263,17 @@ if (!function_exists('apiForbidden')) {
      * @param string|null $message The custom error message, if any.
      * @param array|string $errors A list of errors or a single error message.
      * @param string|int|\UnitEnum|null $errorCode The specific error code, if applicable.
+     * @param array $headers optional headers to be implemented in response.
      * @return \Illuminate\Http\JsonResponse
      */
     function apiForbidden(
         ?string                  $message = null,
         array|string             $errors = [],
-        string|int|UnitEnum|null $errorCode = null
+        string|int|UnitEnum|null $errorCode = null,
+        array                    $headers = []
     )
     {
-        return ApiResponse::apiForbidden($message, $errors, $errorCode);
+        return ApiResponse::apiForbidden($message, $errors, $errorCode, $headers);
     }
 }
 
@@ -269,14 +281,15 @@ if (!function_exists('apiPaginate')) {
     /**
      * Paginate data for API responses.
      *
-     * @param \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Http\Resources\Json\AnonymousResourceCollection $pagination
+     * @param LengthAwarePaginator|AnonymousResourceCollection $pagination
      * @param array $appends
      * @param bool $reverse_data
+     * @param array $headers optional headers to be implemented in response.
      * @return \Illuminate\Http\JsonResponse
      */
-    function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, array $appends = [], bool $reverse_data = false)
+    function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, array $appends = [], bool $reverse_data = false, array $headers = [])
     {
-        return ApiResponse::apiPaginate($pagination, $appends, $reverse_data);
+        return ApiResponse::apiPaginate($pagination, $appends, $reverse_data, $headers);
     }
 }
 
@@ -316,11 +329,17 @@ if (!function_exists('apiStreamResponse')) {
      * @param \Generator $generator The generator providing the streamable data.
      * @param string|null $message An optional message to include in the response.
      * @param int $statusCode The HTTP status code to use for the response.
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\StreamedJsonResponse
+     * @param array $headers optional headers to be implemented in response.
+     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\StreamedJsonResponse
      */
-    function apiStreamResponse(Generator $generator, ?string $message = null, int $statusCode = Response::HTTP_OK)
+    function apiStreamResponse(
+        Generator $generator,
+        ?string   $message = null,
+        int       $statusCode = Response::HTTP_OK,
+        array     $headers = []
+    )
     {
-        return ApiResponse::apiStreamResponse($generator, $message, $statusCode);
+        return ApiResponse::apiStreamResponse($generator, $message, $statusCode, $headers);
     }
 }
 
@@ -331,7 +350,7 @@ if (!function_exists('apiResponse')) {
      * @param array|string|null $arg The argument used for the response, can be an array, string, or null.
      * @param mixed $data The data to include in the response.
      * @param array $guards An array of guards to apply to the response.
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\StreamedJsonResponse
+     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\StreamedJsonResponse
      */
     function apiResponse(array|string|null $arg = null, mixed $data = null, array $guards = [])
     {
