@@ -120,7 +120,7 @@ class Handler extends ExceptionHandler
         }
 
         return apiResponse([
-            'status_code' => $this->isHttpException($e) ? $e->getStatusCode() : 500,
+            'status_code' => $this->isHttpException($e) ? $e->getStatusCode() : $e->getCode() ?? 500,
             'throw_exception' => true,
             'message' => $message,
             'data' => $data->toArray(),
