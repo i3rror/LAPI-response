@@ -12,14 +12,14 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ItemNotFoundException;
 use Illuminate\Validation\ValidationException;
-use MA\LaravelApiResponse\Enums\ErrorCodesEnum;
+use MA\LaravelApiResponse\Traits\APIResponseTrait;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
-use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Throwable;
-use UnitEnum;
 
 class Handler extends ExceptionHandler
 {
+    use APIResponseTrait;
+
     /**
      * Render an exception into an HTTP response.
      *
@@ -60,22 +60,40 @@ class Handler extends ExceptionHandler
      */
     protected function invalidJson($request, ValidationException $exception)
     {
-            // Set errors
-            $errors = config('response.returnValidationErrorsKeys', true) ?
-                $exception->errors() :
-                collect($exception->errors())->collapse()->all();
-            if ((bool)config('response.returnDefaultErrorCodes', true)) {
-                $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiValidate', 'VALIDATION_FAILED'));
-            } else {
-                $errorCode = null;
-            }
+        // Set errors
+        $errors = config('response.returnValidationErrorsKeys', true) ?
+            $exception->validator->errors()->toArray() :
+            $exception->validator->errors()->all();
 
-            return apiBadRequest($errors, $exception->getMessage(),true, $errorCode);
-        /*return apiResponse([
+        // Set errors
+        $errorsCollection = collect($errors)
+            ->filter(function ($value, $key) {
+                return !empty($value);
+            });
+
+        // Set errors collection
+        if ($errorsCollection->isNotEmpty()) {
+            $errorsCollection = collect([
+                'errors' => $errorsCollection->toArray(),
+            ]);
+        }
+
+        // Get error code
+        if ((bool)config('response.returnDefaultErrorCodes', true)) {
+            $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiValidate', 'VALIDATION_FAILED'));
+        } else {
+            $errorCode = null;
+        }
+
+        return apiResponse([
             'status_code' => $exception->status,
+            'throw_exception' => true,
             'message' => $exception->getMessage(),
-            'errors' => $exception->errors(),
-        ]);*/
+            'data' => null,
+            'errors' => $errorsCollection->toArray(),
+            'errorCode' => $errorCode,
+            'response_headers' => $exception->getResponse(),
+        ]);
     }
 
     /**
@@ -108,23 +126,5 @@ class Handler extends ExceptionHandler
             'data' => $data->toArray(),
             'response_headers' => $this->isHttpException($e) ? $e->getHeaders() : [],
         ]);
-    }
-
-    /**
-     * Get error code
-     * @param string|int $errorCode
-     * @return UnitEnum
-     */
-    private function getErrorCode(string|int $errorCode): UnitEnum
-    {
-        // Set a default value if error code not sent
-        $errorCodesEnum = config('response.errorCodes', ErrorCodesEnum::class);
-
-        // Set error code enum
-        if (!$errorCodesEnum instanceof UnitEnum) {
-            $errorCodesEnum = ErrorCodesEnum::class;
-        }
-
-        return call_user_func([$errorCodesEnum, 'getProperty'], $errorCode);
     }
 }
