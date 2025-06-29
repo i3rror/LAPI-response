@@ -12,9 +12,11 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ItemNotFoundException;
 use Illuminate\Validation\ValidationException;
+use MA\LaravelApiResponse\Enums\ErrorCodesEnum;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Throwable;
+use UnitEnum;
 
 class Handler extends ExceptionHandler
 {
@@ -54,15 +56,26 @@ class Handler extends ExceptionHandler
      *
      * @param Request $request
      * @param ValidationException $exception
-     * @return JsonResponse|StreamedJsonResponse
+     * @return JsonResponse
      */
     protected function invalidJson($request, ValidationException $exception)
     {
-        return apiResponse([
+            // Set errors
+            $errors = config('response.returnValidationErrorsKeys', true) ?
+                $exception->errors() :
+                collect($exception->errors())->collapse()->all();
+            if ((bool)config('response.returnDefaultErrorCodes', true)) {
+                $errorCode = $this->getErrorCode(config('response.errorCodesDefaults.apiValidate', 'VALIDATION_FAILED'));
+            } else {
+                $errorCode = null;
+            }
+
+            return apiBadRequest($errors, $exception->getMessage(),true, $errorCode);
+        /*return apiResponse([
             'status_code' => $exception->status,
             'message' => $exception->getMessage(),
             'errors' => $exception->errors(),
-        ]);
+        ]);*/
     }
 
     /**
@@ -95,5 +108,23 @@ class Handler extends ExceptionHandler
             'data' => $data->toArray(),
             'response_headers' => $this->isHttpException($e) ? $e->getHeaders() : [],
         ]);
+    }
+
+    /**
+     * Get error code
+     * @param string|int $errorCode
+     * @return UnitEnum
+     */
+    private function getErrorCode(string|int $errorCode): UnitEnum
+    {
+        // Set a default value if error code not sent
+        $errorCodesEnum = config('response.errorCodes', ErrorCodesEnum::class);
+
+        // Set error code enum
+        if (!$errorCodesEnum instanceof UnitEnum) {
+            $errorCodesEnum = ErrorCodesEnum::class;
+        }
+
+        return call_user_func([$errorCodesEnum, 'getProperty'], $errorCode);
     }
 }
