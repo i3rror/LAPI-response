@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 return [
     // Remove null values from array.
@@ -19,85 +19,85 @@ return [
 
     // Success status codes.
     'apiSuccessCodes' => [
-        Response::HTTP_OK,
-        Response::HTTP_CREATED,
-        Response::HTTP_ACCEPTED,
+        HttpFoundationResponse::HTTP_OK,
+        HttpFoundationResponse::HTTP_CREATED,
+        HttpFoundationResponse::HTTP_ACCEPTED,
     ],
 
     // Exceptions status codes.
     'apiExceptionCodes' => [
-        Response::HTTP_CONFLICT,
-        Response::HTTP_UNPROCESSABLE_ENTITY,
-        Response::HTTP_BAD_REQUEST,
-        Response::HTTP_UNAUTHORIZED,
-        Response::HTTP_FORBIDDEN,
+        HttpFoundationResponse::HTTP_CONFLICT,
+        HttpFoundationResponse::HTTP_UNPROCESSABLE_ENTITY,
+        HttpFoundationResponse::HTTP_BAD_REQUEST,
+        HttpFoundationResponse::HTTP_UNAUTHORIZED,
+        HttpFoundationResponse::HTTP_FORBIDDEN,
     ],
 
     // Status codes.
     'statusCodes' => [
-        Response::HTTP_CONTINUE,
-        Response::HTTP_SWITCHING_PROTOCOLS,
-        Response::HTTP_PROCESSING,
-        Response::HTTP_EARLY_HINTS,
-        Response::HTTP_OK,
-        Response::HTTP_CREATED,
-        Response::HTTP_ACCEPTED,
-        Response::HTTP_NON_AUTHORITATIVE_INFORMATION,
-        Response::HTTP_NO_CONTENT,
-        Response::HTTP_RESET_CONTENT,
-        Response::HTTP_PARTIAL_CONTENT,
-        Response::HTTP_MULTI_STATUS,
-        Response::HTTP_ALREADY_REPORTED,
-        Response::HTTP_IM_USED,
-        Response::HTTP_MULTIPLE_CHOICES,
-        Response::HTTP_MOVED_PERMANENTLY,
-        Response::HTTP_FOUND,
-        Response::HTTP_SEE_OTHER,
-        Response::HTTP_NOT_MODIFIED,
-        Response::HTTP_USE_PROXY,
-        Response::HTTP_RESERVED,
-        Response::HTTP_TEMPORARY_REDIRECT,
-        Response::HTTP_PERMANENTLY_REDIRECT,
-        Response::HTTP_BAD_REQUEST,
-        Response::HTTP_UNAUTHORIZED,
-        Response::HTTP_PAYMENT_REQUIRED,
-        Response::HTTP_FORBIDDEN,
-        Response::HTTP_NOT_FOUND,
-        Response::HTTP_METHOD_NOT_ALLOWED,
-        Response::HTTP_NOT_ACCEPTABLE,
-        Response::HTTP_PROXY_AUTHENTICATION_REQUIRED,
-        Response::HTTP_REQUEST_TIMEOUT,
-        Response::HTTP_CONFLICT,
-        Response::HTTP_GONE,
-        Response::HTTP_LENGTH_REQUIRED,
-        Response::HTTP_PRECONDITION_FAILED,
-        Response::HTTP_REQUEST_ENTITY_TOO_LARGE,
-        Response::HTTP_REQUEST_URI_TOO_LONG,
-        Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
-        Response::HTTP_REQUESTED_RANGE_NOT_SATISFIABLE,
-        Response::HTTP_EXPECTATION_FAILED,
-        Response::HTTP_I_AM_A_TEAPOT,
-        Response::HTTP_MISDIRECTED_REQUEST,
-        Response::HTTP_UNPROCESSABLE_ENTITY,
-        Response::HTTP_LOCKED,
-        Response::HTTP_FAILED_DEPENDENCY,
-        Response::HTTP_TOO_EARLY,
-        Response::HTTP_UPGRADE_REQUIRED,
-        Response::HTTP_PRECONDITION_REQUIRED,
-        Response::HTTP_TOO_MANY_REQUESTS,
-        Response::HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE,
-        Response::HTTP_UNAVAILABLE_FOR_LEGAL_REASONS,
-        Response::HTTP_INTERNAL_SERVER_ERROR,
-        Response::HTTP_NOT_IMPLEMENTED,
-        Response::HTTP_BAD_GATEWAY,
-        Response::HTTP_SERVICE_UNAVAILABLE,
-        Response::HTTP_GATEWAY_TIMEOUT,
-        Response::HTTP_VERSION_NOT_SUPPORTED,
-        Response::HTTP_VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL,
-        Response::HTTP_INSUFFICIENT_STORAGE,
-        Response::HTTP_LOOP_DETECTED,
-        Response::HTTP_NOT_EXTENDED,
-        Response::HTTP_NETWORK_AUTHENTICATION_REQUIRED,
+        HttpFoundationResponse::HTTP_CONTINUE,
+        HttpFoundationResponse::HTTP_SWITCHING_PROTOCOLS,
+        HttpFoundationResponse::HTTP_PROCESSING,
+        HttpFoundationResponse::HTTP_EARLY_HINTS,
+        HttpFoundationResponse::HTTP_OK,
+        HttpFoundationResponse::HTTP_CREATED,
+        HttpFoundationResponse::HTTP_ACCEPTED,
+        HttpFoundationResponse::HTTP_NON_AUTHORITATIVE_INFORMATION,
+        HttpFoundationResponse::HTTP_NO_CONTENT,
+        HttpFoundationResponse::HTTP_RESET_CONTENT,
+        HttpFoundationResponse::HTTP_PARTIAL_CONTENT,
+        HttpFoundationResponse::HTTP_MULTI_STATUS,
+        HttpFoundationResponse::HTTP_ALREADY_REPORTED,
+        HttpFoundationResponse::HTTP_IM_USED,
+        HttpFoundationResponse::HTTP_MULTIPLE_CHOICES,
+        HttpFoundationResponse::HTTP_MOVED_PERMANENTLY,
+        HttpFoundationResponse::HTTP_FOUND,
+        HttpFoundationResponse::HTTP_SEE_OTHER,
+        HttpFoundationResponse::HTTP_NOT_MODIFIED,
+        HttpFoundationResponse::HTTP_USE_PROXY,
+        HttpFoundationResponse::HTTP_RESERVED,
+        HttpFoundationResponse::HTTP_TEMPORARY_REDIRECT,
+        HttpFoundationResponse::HTTP_PERMANENTLY_REDIRECT,
+        HttpFoundationResponse::HTTP_BAD_REQUEST,
+        HttpFoundationResponse::HTTP_UNAUTHORIZED,
+        HttpFoundationResponse::HTTP_PAYMENT_REQUIRED,
+        HttpFoundationResponse::HTTP_FORBIDDEN,
+        HttpFoundationResponse::HTTP_NOT_FOUND,
+        HttpFoundationResponse::HTTP_METHOD_NOT_ALLOWED,
+        HttpFoundationResponse::HTTP_NOT_ACCEPTABLE,
+        HttpFoundationResponse::HTTP_PROXY_AUTHENTICATION_REQUIRED,
+        HttpFoundationResponse::HTTP_REQUEST_TIMEOUT,
+        HttpFoundationResponse::HTTP_CONFLICT,
+        HttpFoundationResponse::HTTP_GONE,
+        HttpFoundationResponse::HTTP_LENGTH_REQUIRED,
+        HttpFoundationResponse::HTTP_PRECONDITION_FAILED,
+        HttpFoundationResponse::HTTP_REQUEST_ENTITY_TOO_LARGE,
+        HttpFoundationResponse::HTTP_REQUEST_URI_TOO_LONG,
+        HttpFoundationResponse::HTTP_UNSUPPORTED_MEDIA_TYPE,
+        HttpFoundationResponse::HTTP_REQUESTED_RANGE_NOT_SATISFIABLE,
+        HttpFoundationResponse::HTTP_EXPECTATION_FAILED,
+        HttpFoundationResponse::HTTP_I_AM_A_TEAPOT,
+        HttpFoundationResponse::HTTP_MISDIRECTED_REQUEST,
+        HttpFoundationResponse::HTTP_UNPROCESSABLE_ENTITY,
+        HttpFoundationResponse::HTTP_LOCKED,
+        HttpFoundationResponse::HTTP_FAILED_DEPENDENCY,
+        HttpFoundationResponse::HTTP_TOO_EARLY,
+        HttpFoundationResponse::HTTP_UPGRADE_REQUIRED,
+        HttpFoundationResponse::HTTP_PRECONDITION_REQUIRED,
+        HttpFoundationResponse::HTTP_TOO_MANY_REQUESTS,
+        HttpFoundationResponse::HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE,
+        HttpFoundationResponse::HTTP_UNAVAILABLE_FOR_LEGAL_REASONS,
+        HttpFoundationResponse::HTTP_INTERNAL_SERVER_ERROR,
+        HttpFoundationResponse::HTTP_NOT_IMPLEMENTED,
+        HttpFoundationResponse::HTTP_BAD_GATEWAY,
+        HttpFoundationResponse::HTTP_SERVICE_UNAVAILABLE,
+        HttpFoundationResponse::HTTP_GATEWAY_TIMEOUT,
+        HttpFoundationResponse::HTTP_VERSION_NOT_SUPPORTED,
+        HttpFoundationResponse::HTTP_VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL,
+        HttpFoundationResponse::HTTP_INSUFFICIENT_STORAGE,
+        HttpFoundationResponse::HTTP_LOOP_DETECTED,
+        HttpFoundationResponse::HTTP_NOT_EXTENDED,
+        HttpFoundationResponse::HTTP_NETWORK_AUTHENTICATION_REQUIRED,
     ],
 
     // Enable error codes
@@ -115,6 +115,12 @@ return [
     // Hide next, previous links in meta
     'hideMetaPaginationLinks' => true,
 
+    /**
+     * Render client errors status code in statusCode property.
+     * if true it will be written, if false it will be 500
+     */
+    'renderClientErrorsStatusCode' => true,
+
     // Set error codes output default value for built-in functions
     'errorCodesDefaults' => [
         'apiNotFound' => 'RESOURCE_NOT_FOUND',
@@ -124,4 +130,99 @@ return [
         'apiForbidden' => 'FORBIDDEN',
         'apiValidate' => 'VALIDATION_FAILED',
     ],
+
+    /*
+     |-----------------------------------------------------------------------------------------------------
+     | Custom Error Handlers
+     |-----------------------------------------------------------------------------------------------------
+     | /**
+     | * Human-readable error message.
+     | * - If omitted, a default message may be used.
+     | * - Can be a plain string, or a callable that builds a message from the exception.
+     | * - Callable signature: fn(Throwable $e): string
+     | *\/
+     | message?: string|callable(\Throwable):string,
+     |
+     | /**
+     | * Application-specific error code.
+     | * - String or integer (enum-to-string/int also acceptable).
+     | * - Nullable; if null and "returnDefaultErrorCodes" is true, a default may be used.
+     | *\/
+     | code?: string|int|null,
+     |
+     | /**
+     | * HTTP status code to return.
+     | * - Use Symfony Response constants (preferred) or any valid HTTP status code integer.
+     | * - e.g. \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND (404)
+     | *\/
+     | statusCode?: int,
+     |
+     | /**
+     | * Validation/diagnostic errors to expose to the client.
+     | * Accepts either:
+     | * - A flat list of error messages:
+     | *     ["Invalid email", "Password too short"]
+     | * - A key-value map of named errors:
+     | *     ["email" => "Invalid email", "password" => ["Too short", "Must contain a number"]]
+     | * - Mixed lists + keyed entries:
+     | *     [0 => "Generic error", "field" => "Specific error"]
+     | * - Can be null/omitted to exclude.
+     | *\/
+     | errors?: list<string>|array<string, string|list<string>>|null,
+     |
+     | /**
+     | * Extra payload to include under the "extra" property.
+     | * - Arbitrary associative data, e.g. ["invalid_argument" => true]
+     | * - May include its own "errors" which can be the same shapes as above.
+     | * - If null/empty after processing, "extra" should be removed from the response.
+     | *\/
+     | extra?: array<string, mixed>|null,
+     |
+     | Examples:
+     |
+     | - Simple Not Found:
+     |   [
+     |     \Illuminate\Support\ItemNotFoundException::class => [
+     |       'message' => 'Resource not found!',
+     |       'code' => 'RESOURCE_NOT_FOUND',
+     |       'statusCode' => \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND,
+     |     ],
+     |   ]
+     |
+     | - Invalid Argument with mixed errors and extra:
+     |   [
+     |     \InvalidArgumentException::class => [
+     |       'message' => 'Invalid argument!',
+     |       'code' => 'INVALID_ARGUMENT',
+     |       'statusCode' => \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST,
+     |       'errors' => [
+     |         0 => 'Invalid Argument!',
+     |         'test_error' => 'test error message',
+     |       ],
+     |       'extra' => [
+     |         'invalid_argument' => true,
+     |       ],
+     |     ],
+     |   ]
+     |
+     | - Dynamic message and report decision:
+     |   [
+     |     \RuntimeException::class => [
+     |       'message' => static fn(\Throwable $e) => 'Runtime error: ' . $e->getMessage(),
+     |       'statusCode' => \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR,
+     |     ],
+     |   ]
+     | - PLEASE NOTE THAT THESE ARE EXAMPLES ONLY.
+     | - THEY ARE NOT INTENDED TO BE USED DIRECTLY IN YOUR CODE THE WAY IT IS.
+     | - THEY ARE JUST HERE TO SHOW WHAT THE CONFIGURATION MAY LOOK LIKE.
+     | - ALSO Illuminate\Http\Exceptions\HttpResponseException IS NOT SUPPORTED AS UT SHOULD BE ESCAPED.
+     |
+     */
+    'customErrorHandlers' => [
+        Illuminate\Support\ItemNotFoundException::class => [
+            'message' => 'Resource not found!',
+            'code' => 'RESOURCE_NOT_FOUND',
+            'statusCode' => HttpFoundationResponse::HTTP_NOT_FOUND,
+        ],
+    ]
 ];
