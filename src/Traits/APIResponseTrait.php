@@ -8,6 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use MA\LaravelApiResponse\Enums\ErrorCodesEnum;
@@ -260,14 +261,14 @@ trait APIResponseTrait
 
     /**
      * Paginate data
-     * @param AnonymousResourceCollection|LengthAwarePaginator $pagination
+     * @param LengthAwarePaginator|ResourceCollection $pagination
      * @param array $appends Extra data to append to the response
      * @param bool $reverse_data Reverse data
      * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
     public function apiPaginate(
-        LengthAwarePaginator|AnonymousResourceCollection $pagination,
+        LengthAwarePaginator|ResourceCollection $pagination,
         array                                            $appends = [],
         bool                                             $reverse_data = false,
         array                                            $headers = []
@@ -292,7 +293,7 @@ trait APIResponseTrait
         }
 
         // If no page found
-        if ($current > $last) {
+        if ($current > $last && config('response.returnNotFoundOnEmptyPagination', true)) {
             return $this->apiResponse(['type' => 'not found']);
         }
 

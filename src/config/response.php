@@ -115,6 +115,9 @@ return [
     // Hide next, previous links in meta
     'hideMetaPaginationLinks' => true,
 
+    // Throw NotFoundHttpException if pagination returns empty
+    'returnNotFoundOnEmptyPagination' => true,
+
     /**
      * Render client errors status code in statusCode property.
      * if true it will be written, if false it will be 500
