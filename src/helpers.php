@@ -151,6 +151,21 @@ if (!function_exists('app_path')) {
     }
 }
 
+if (!function_exists('apiCreated')) {
+    /**
+     * Handle a successful API response.
+     *
+     * @param mixed|null $data
+     * @param string|null $message
+     * @param array $headers
+     * @return \Illuminate\Http\JsonResponse
+     */
+    function apiCreated(mixed $data = null, ?string $message = null, array $headers = [])
+    {
+        return ApiResponse::apiCreated($data, $message);
+    }
+}
+
 if (!function_exists('apiOk')) {
     /**
      * Handle a successful API response.

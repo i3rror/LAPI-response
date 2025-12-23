@@ -24,6 +24,23 @@ trait APIResponseTrait
      * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
+    public function apiCreated(mixed $data = null, ?string $message = null, array $headers = []): JsonResponse|StreamedJsonResponse
+    {
+        return $this->apiResponse([
+            'status_code' => Response::HTTP_CREATED,
+            'data' => $data,
+            'message' => $message,
+            'response_headers' => $headers,
+        ]);
+    }
+
+    /**
+     * The ok response
+     * @param $data mixed|null
+     * @param string|null $message
+     * @param array $headers
+     * @return JsonResponse|StreamedJsonResponse
+     */
     public function apiOk(mixed $data = null, ?string $message = null, array $headers = []): JsonResponse|StreamedJsonResponse
     {
         return $this->apiResponse([
