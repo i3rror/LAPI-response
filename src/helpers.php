@@ -2,7 +2,7 @@
 
 use Illuminate\Container\Container;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Date;
@@ -296,13 +296,13 @@ if (!function_exists('apiPaginate')) {
     /**
      * Paginate data for API responses.
      *
-     * @param LengthAwarePaginator|AnonymousResourceCollection $pagination
+     * @param LengthAwarePaginator|ResourceCollection $pagination
      * @param array $appends
      * @param bool $reverse_data
      * @param array $headers optional headers to be implemented in response.
      * @return \Illuminate\Http\JsonResponse
      */
-    function apiPaginate(LengthAwarePaginator|AnonymousResourceCollection $pagination, array $appends = [], bool $reverse_data = false, array $headers = [])
+    function apiPaginate(LengthAwarePaginator|ResourceCollection $pagination, array $appends = [], bool $reverse_data = false, array $headers = [])
     {
         return ApiResponse::apiPaginate($pagination, $appends, $reverse_data, $headers);
     }
