@@ -30,7 +30,7 @@
     "illuminate/pagination": ">=10.43.0",
     "illuminate/support": ">=10.43.0",
     "illuminate/validation": ">=10.43.0",
-    "symfony/http-foundation": "^6.4.30",
+    "symfony/http-foundation": "^6.4.30 || ^7.3.7",
     "psr/log": "^3.0"
   },
   "require-dev": {
