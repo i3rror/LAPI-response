@@ -8,6 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use MA\LaravelApiResponse\Enums\ErrorCodesEnum;
@@ -16,6 +17,23 @@ use UnitEnum;
 
 trait APIResponseTrait
 {
+    /**
+     * The ok response
+     * @param $data mixed|null
+     * @param string|null $message
+     * @param array $headers
+     * @return JsonResponse|StreamedJsonResponse
+     */
+    public function apiCreated(mixed $data = null, ?string $message = null, array $headers = []): JsonResponse|StreamedJsonResponse
+    {
+        return $this->apiResponse([
+            'status_code' => Response::HTTP_CREATED,
+            'data' => $data,
+            'message' => $message,
+            'response_headers' => $headers,
+        ]);
+    }
+
     /**
      * The ok response
      * @param $data mixed|null
@@ -260,14 +278,14 @@ trait APIResponseTrait
 
     /**
      * Paginate data
-     * @param AnonymousResourceCollection|LengthAwarePaginator $pagination
+     * @param LengthAwarePaginator|ResourceCollection $pagination
      * @param array $appends Extra data to append to the response
      * @param bool $reverse_data Reverse data
      * @param array $headers
      * @return JsonResponse|StreamedJsonResponse
      */
     public function apiPaginate(
-        LengthAwarePaginator|AnonymousResourceCollection $pagination,
+        LengthAwarePaginator|ResourceCollection $pagination,
         array                                            $appends = [],
         bool                                             $reverse_data = false,
         array                                            $headers = []
@@ -292,7 +310,7 @@ trait APIResponseTrait
         }
 
         // If no page found
-        if ($current > $last) {
+        if ($current > $last && config('response.returnNotFoundOnEmptyPagination', true)) {
             return $this->apiResponse(['type' => 'not found']);
         }
 
