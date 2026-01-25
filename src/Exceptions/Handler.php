@@ -46,11 +46,20 @@ class Handler extends ExceptionHandler
                     $message = null;
                 }
 
+                // Get error code
+                if ((bool)config('response.returnDefaultErrorCodes', true) && isset($handler['errorCode'])) {
+                    $errorCode = $this->getErrorCode($handler['errorCode']);
+                } else {
+                    $errorCode = null;
+                }
+
                 if ($e instanceof $key) {
                     $exception = $this->mergeWithExtras([
                         'throw_exception' => true,
+                        'type' => $handler['type'] ?? null,
                         'status_code' => $handler['statusCode'] ?? $e->getCode(),
                         'message' => $message,
+                        'errorCode' => $errorCode,
                         'data' => $handler['data'] ?? null,
                         'response_headers' => $this->isHttpException($e) ? $e->getHeaders() : [],
                     ], $handler['extra'] ?? [], $handler['errors'] ?? [])

@@ -466,7 +466,7 @@ trait APIResponseTrait
         }
 
         // Handle data
-        if (is_null($data) && isset($arg['data'])) {
+        if (is_null($data) && array_key_exists('data', $arg)) {
             $data = $arg['data'];
         } elseif (
             is_null($data) &&
