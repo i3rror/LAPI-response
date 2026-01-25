@@ -151,7 +151,7 @@ return [
      | * - String or integer (enum-to-string/int also acceptable).
      | * - Nullable; if null and "returnDefaultErrorCodes" is true, a default may be used.
      | *\/
-     | code?: string|int|null,
+     | errorCode?: string|int|null,
      |
      | /**
      | * HTTP status code to return.
@@ -187,7 +187,7 @@ return [
      |   [
      |     \Illuminate\Support\ItemNotFoundException::class => [
      |       'message' => 'Resource not found!',
-     |       'code' => 'RESOURCE_NOT_FOUND',
+     |       'errorCode' => 'RESOURCE_NOT_FOUND',
      |       'statusCode' => \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND,
      |     ],
      |   ]
@@ -196,7 +196,7 @@ return [
      |   [
      |     \InvalidArgumentException::class => [
      |       'message' => 'Invalid argument!',
-     |       'code' => 'INVALID_ARGUMENT',
+     |       'errorCode' => 'INVALID_ARGUMENT',
      |       'statusCode' => \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST,
      |       'errors' => [
      |         0 => 'Invalid Argument!',
@@ -224,7 +224,7 @@ return [
     'customErrorHandlers' => [
         Illuminate\Support\ItemNotFoundException::class => [
             'message' => 'Resource not found!',
-            'code' => 'RESOURCE_NOT_FOUND',
+            'errorCode' => 'RESOURCE_NOT_FOUND',
             'statusCode' => HttpFoundationResponse::HTTP_NOT_FOUND,
         ],
     ]
