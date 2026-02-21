@@ -3,6 +3,7 @@
 namespace MA\LaravelApiResponse\Traits;
 
 use Illuminate\Http\Concerns\InteractsWithContentTypes;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\Validator;
 
@@ -14,10 +15,9 @@ trait APIRequestValidator
     /**
      * Handle a failed validation attempt.
      *
-     * @param \Illuminate\Validation\Validator $validator
-     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\StreamedJsonResponse
+     * @param Validator|\Illuminate\Contracts\Validation\Validator $validator
+     * @return JsonResponse
      *
-     * @throws \Illuminate\Validation\ValidationException
      */
     protected function failedValidation(Validator|\Illuminate\Contracts\Validation\Validator $validator)
     {
@@ -35,7 +35,7 @@ trait APIRequestValidator
                 $errorCode = null;
             }
 
-            return $this->apiBadRequest($errors, $this->errorMessage ?? null,true, $errorCode);
+            return apiBadRequest($errors, $this->errorMessage ?? null, true, $errorCode);
         }
 
         throw new $exception($validator);
@@ -44,7 +44,7 @@ trait APIRequestValidator
     /**
      * Handle a failed authorization attempt.
      *
-     * @return void
+     * @return JsonResponse
      *
      * @throws \Illuminate\Validation\UnauthorizedException
      */
@@ -52,7 +52,7 @@ trait APIRequestValidator
     {
         // if expects json
         if ($this->expectsJson()) {
-            $this->apiForbidden();
+            return $this->apiForbidden();
         }
 
         throw new UnauthorizedException;
