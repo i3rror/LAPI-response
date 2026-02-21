@@ -22,9 +22,9 @@ trait APIResponseTrait
      * @param $data mixed|null
      * @param string|null $message
      * @param array $headers
-     * @return JsonResponse|StreamedJsonResponse
+     * @return JsonResponse
      */
-    public function apiCreated(mixed $data = null, ?string $message = null, array $headers = []): JsonResponse|StreamedJsonResponse
+    public function apiCreated(mixed $data = null, ?string $message = null, array $headers = []): JsonResponse
     {
         return $this->apiResponse([
             'status_code' => Response::HTTP_CREATED,
@@ -39,9 +39,9 @@ trait APIResponseTrait
      * @param $data mixed|null
      * @param string|null $message
      * @param array $headers
-     * @return JsonResponse|StreamedJsonResponse
+     * @return JsonResponse
      */
-    public function apiOk(mixed $data = null, ?string $message = null, array $headers = []): JsonResponse|StreamedJsonResponse
+    public function apiOk(mixed $data = null, ?string $message = null, array $headers = []): JsonResponse
     {
         return $this->apiResponse([
             'data' => $data,
@@ -57,7 +57,7 @@ trait APIResponseTrait
      * @param bool $throw_exception
      * @param string|int|UnitEnum|null $errorCode
      * @param array $headers
-     * @return JsonResponse|StreamedJsonResponse
+     * @return JsonResponse
      */
     public function apiNotFound(
         array|string             $errors = [],
@@ -65,7 +65,7 @@ trait APIResponseTrait
         bool                     $throw_exception = true,
         string|int|UnitEnum|null $errorCode = null,
         array                    $headers = []
-    ): JsonResponse|StreamedJsonResponse
+    ): JsonResponse
     {
         // Set errors
         $errorsCollection = collect($errors)
@@ -103,7 +103,7 @@ trait APIResponseTrait
      * @param bool $throw_exception
      * @param string|int|null|UnitEnum $errorCode
      * @param array $headers
-     * @return JsonResponse|StreamedJsonResponse
+     * @return JsonResponse
      */
     public function apiBadRequest(
         array|string             $errors = [],
@@ -111,7 +111,7 @@ trait APIResponseTrait
         bool                     $throw_exception = true,
         string|int|null|UnitEnum $errorCode = null,
         array                    $headers = []
-    ): JsonResponse|StreamedJsonResponse
+    ): JsonResponse
     {
         // Set errors
         $errorsCollection = collect($errors)
@@ -149,7 +149,7 @@ trait APIResponseTrait
      * @param bool $throw_exception
      * @param string|int|UnitEnum|null $errorCode
      * @param array $headers
-     * @return JsonResponse|StreamedJsonResponse
+     * @return JsonResponse
      */
     public function apiException(
         array|string             $errors = [],
@@ -157,7 +157,7 @@ trait APIResponseTrait
         bool                     $throw_exception = true,
         string|int|UnitEnum|null $errorCode = null,
         array                    $headers = []
-    ): JsonResponse|StreamedJsonResponse
+    ): JsonResponse
     {
         // Set errors
         $errorsCollection = collect($errors)
@@ -194,14 +194,14 @@ trait APIResponseTrait
      * @param array|string $errors
      * @param string|int|UnitEnum|null $errorCode
      * @param array $headers
-     * @return JsonResponse|StreamedJsonResponse
+     * @return JsonResponse
      */
     public function apiUnauthenticated(
         ?string                  $message = null,
         array|string             $errors = [],
         string|int|UnitEnum|null $errorCode = null,
         array                    $headers = []
-    ): JsonResponse|StreamedJsonResponse
+    ): JsonResponse
     {
         // Set errors
         $errorsCollection = collect($errors)
@@ -238,14 +238,14 @@ trait APIResponseTrait
      * @param array|string $errors
      * @param string|int|UnitEnum|null $errorCode
      * @param array $headers
-     * @return JsonResponse|StreamedJsonResponse
+     * @return JsonResponse
      */
     public function apiForbidden(
         ?string                  $message = null,
         array|string             $errors = [],
         string|int|UnitEnum|null $errorCode = null,
         array                    $headers = []
-    ): JsonResponse|StreamedJsonResponse
+    ): JsonResponse
     {
         // Set errors
         $errorsCollection = collect($errors)
@@ -282,14 +282,14 @@ trait APIResponseTrait
      * @param array $appends Extra data to append to the response
      * @param bool $reverse_data Reverse data
      * @param array $headers
-     * @return JsonResponse|StreamedJsonResponse
+     * @return JsonResponse
      */
     public function apiPaginate(
         LengthAwarePaginator|ResourceCollection $pagination,
         array                                            $appends = [],
         bool                                             $reverse_data = false,
         array                                            $headers = []
-    ): JsonResponse|StreamedJsonResponse
+    ): JsonResponse
     {
         // Set pagination data
         $isFirst = $pagination->onFirstPage();
@@ -362,14 +362,14 @@ trait APIResponseTrait
      * @param array $rules
      * @param array $messages
      * @param array $attributes
-     * @return array|JsonResponse|StreamedJsonResponse
+     * @return array|JsonResponse
      */
     public function apiValidate(
         array|Request $request,
         array         $rules,
         array         $messages = [],
         array         $attributes = []
-    ): array|JsonResponse|StreamedJsonResponse
+    ): array|JsonResponse
     {
         // Check if data is a request instance
         if ($request instanceof Request) {
@@ -402,9 +402,9 @@ trait APIResponseTrait
     /**
      * Die and debug
      * @param mixed $data
-     * @return JsonResponse|StreamedJsonResponse
+     * @return JsonResponse
      */
-    public function apiDD(mixed $data): JsonResponse|StreamedJsonResponse
+    public function apiDD(mixed $data): JsonResponse
     {
         return $this->apiResponse([
             'type' => 'Exception',
@@ -419,14 +419,14 @@ trait APIResponseTrait
      * @param string|null $message
      * @param int $statusCode
      * @param array $headers
-     * @return JsonResponse|StreamedJsonResponse
+     * @return StreamedJsonResponse
      */
     public function apiStreamResponse(
         Generator $generator,
         ?string   $message = null,
         int       $statusCode = Response::HTTP_OK,
         array     $headers = []
-    ): JsonResponse|StreamedJsonResponse
+    ): StreamedJsonResponse
     {
         return $this->apiResponse([
             'status_code' => $statusCode,

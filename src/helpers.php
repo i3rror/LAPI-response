@@ -316,7 +316,7 @@ if (!function_exists('apiValidate')) {
      * @param array $rules The validation rules to apply to the data.
      * @param array $messages Optional custom error messages.
      * @param array $attributes Optional custom attribute names.
-     * @return \Illuminate\Http\JsonResponse
+     * @return array|\Illuminate\Http\JsonResponse
      */
     function apiValidate(array|Request $request, array $rules, array $messages = [], array $attributes = [])
     {
